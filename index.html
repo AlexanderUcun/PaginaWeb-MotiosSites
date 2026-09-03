@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+<!-- Configuración básica de idioma, caracteres y adaptación a móviles. -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cyber Ronin // Neural Edges</title>
+
+<!-- style.css contiene todos los estilos visuales de la página. -->
+<link rel="stylesheet" href="style.css">
+<!-- defer espera a que se lea el HTML antes de ejecutar script.js. -->
+<script src="script.js" defer></script>
+
+</head>
+
+<body>
+
+  <!-- Portada principal. Su altura mínima es una pantalla completa. -->
+  <main class="hero">
+
+    <!-- Imagen inferior: cambia la ruta para usar otra imagen de fondo. -->
+    <div class="hero-base-img hero-image-animate" style="background-image:url('img/fondo-base.jpg');"></div>
+
+    <!-- Imagen superior. script.js muestra una parte circular siguiendo el cursor. -->
+    <div class="hero-reveal-img" id="reveal-img" style="background-image:url('img/fondo-reveal.jpg');"></div>
+
+    <!-- Interfaz colocada encima de las imágenes. -->
+    <div class="hero-ui">
+
+      <!-- Contenido de la columna izquierda: texto y producto destacado. -->
+      <div class="hero-left">
+        <div class="hero-copy">
+          <!-- words-pull-up divide el texto en palabras y anima cada una. -->
+          <h1 class="words-pull-up">
+            <span>RONIN-X //</span>
+            <span>SHADOW</span>
+            <span>NIGHTFALL</span>
+          </h1>
+          <!-- fade-up-reveal aparece al entrar en pantalla; data-delay está en segundos. -->
+          <p class="fade-up-reveal" data-delay="0.5">Cultivated with high-res optics and a zero-gravity frame for those who don't just watch the future—they wield it. Shift your reality.</p>
+
+          <!-- Para añadir otro botón, copia un button.icon-btn dentro de este bloque. -->
+          <div class="icon-row fade-up-reveal" data-delay="0.65">
+
+            <!--
+              Botón 1: icono de núcleo principal.
+              Cambia aria-label para describirlo a lectores de pantalla y modifica
+              la ruta <path> o el <circle> para cambiar el dibujo del icono.
+              Para ejecutar una acción al pulsarlo, añade por ejemplo:
+              onclick="alert('Núcleo principal')" o conecta un evento en script.js.
+            -->
+            <button class="icon-btn" aria-label="Main core" type="button">
+              <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                <!-- Hexágono exterior del núcleo. -->
+                <path d="M8 1.4L13.8 4.7V11.3L8 14.6L2.2 11.3V4.7L8 1.4Z"/>
+                <!-- Punto central del icono. -->
+                <circle cx="8" cy="8" r="1.35" fill="currentColor" stroke="none"/>
+              </svg>
+            </button>
+
+            <!--
+              Botón 2: icono de visión o enfoque.
+              Cambia aria-label="Vision" por el nombre de tu acción. Para cambiar
+              el tamaño del dibujo, modifica viewBox o las coordenadas del SVG.
+            -->
+            <button class="icon-btn" aria-label="Vision" type="button">
+              <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                <!-- Esquinas que representan un marco de enfoque. -->
+                <path d="M2 5.2V2h3.2" stroke-linecap="round"/>
+                <path d="M14 5.2V2h-3.2" stroke-linecap="round"/>
+                <path d="M2 10.8V14h3.2" stroke-linecap="round"/>
+                <path d="M14 10.8V14h-3.2" stroke-linecap="round"/>
+                <!-- Cuadro central de la visión. -->
+                <rect x="5.2" y="5.2" width="5.6" height="5.6"/>
+              </svg>
+            </button>
+
+            <!--
+              Botón 3: icono de fuerza o energía.
+              Sustituye el atributo d del <path> por otro trazado SVG para usar
+              un icono diferente. Conserva class="icon-btn" para mantener el estilo.
+            -->
+            <button class="icon-btn" aria-label="Force" type="button">
+              <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                <!-- Silueta de rayo. -->
+                <path d="M9.2 1.6L4 9.1h3.5L6.8 14.4 12 6.9H8.5L9.2 1.6Z" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            
+          </div>
+        </div>
+
+        <!-- Tarjeta de producto: reemplaza la URL de product-thumb para cambiar su imagen. -->
+        <article class="product-card">
+          <div class="product-thumb" aria-hidden="true" style="background-image:url('https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260831_121937_3f02b5a0-5b86-43d9-b30e-03c5e46632e7.png&w=1920&q=85');"></div>
+          <div class="product-body">
+            <h2 class="words-pull-up">CR-01: CYBER FRAME</h2>
+            <p class="fade-up-reveal" data-delay="1.05">Precision-grade optics and a light frame for comfort and clarity.</p>
+          </div>
+          <button class="cart-btn fade-up-reveal" data-delay="1.15">Reserve Now</button>
+        </article>
+      </div>
+
+      <!-- Indicador de página. Cambia el texto 1/26 directamente aquí. -->
+      <div class="hero-page fade-up-reveal" data-delay="0.75">1/26</div>
+
+      <!-- Lista de especificaciones. Duplica un spec-row para añadir otra. -->
+      <div class="specs">
+        <h3 class="words-pull-up">Operative Specs</h3>
+        <div class="spec-row fade-up-reveal" data-delay="1.2">
+          <span class="spec-label">Vision</span>
+          <span class="spec-value">Dual 8K Pulse-OLED</span>
+        </div>
+        <div class="spec-row fade-up-reveal" data-delay="1.3">
+          <span class="spec-label">Nerve</span>
+          <span class="spec-value">R1 - Ronin Engines</span>
+        </div>
+        <div class="spec-row fade-up-reveal" data-delay="1.4">
+          <span class="spec-label">Reflex</span>
+          <span class="spec-value">144Hz Low-Lag Ops</span>
+        </div>
+        <div class="spec-row fade-up-reveal" data-delay="1.5">
+          <span class="spec-label">Armor</span>
+          <span class="spec-value">Lightweight Shadow Shell</span>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+<!--
+  Todo lo que coloques después de .hero queda debajo de la portada y se puede
+  visitar desplazando la página hacia abajo. Para crear otra parte, copia este
+  bloque, cambia su clase y añade los estilos correspondientes en style.css.
+-->
+<!-- Sección posterior: todo lo que se añada debajo continúa el scroll vertical. -->
+<section class="next-section">
+  <h2>Continue exploring</h2>
+  <p>Descubre más detalles del diseño y las capacidades de la nueva generación.</p>
+</section>
+
+
+</body>
+</html>

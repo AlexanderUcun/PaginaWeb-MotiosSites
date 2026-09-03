@@ -1,0 +1,487 @@
+
+/* ===== Variables reutilizables =====
+ * Cambia estos valores para modificar la paleta completa desde un solo lugar.
+ */
+:root {
+--cream: #FBDBAF;
+--muted: rgba(251, 219, 175, 0.72);
+--label: rgba(251, 219, 175, 0.48);
+--orange: #E07020;
+--card: rgba(10, 8, 7, 0.58);
+}
+
+/* Evita que padding y bordes aumenten inesperadamente el tamaño de los elementos. */
+* { box-sizing: border-box; }
+
+/* ===== Configuración general ===== */
+html, body {
+margin: 0;
+padding: 0;
+background: #C45A18;
+color: var(--cream);
+/* Oculta únicamente el desbordamiento horizontal, sin bloquear el scroll vertical. */
+overflow-x: hidden;
+font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* Tipografía de títulos. .heading-font permite reutilizarla en otros elementos. */
+h1, h2, h3, .heading-font {
+font-family: 'Orbitron-Medium', 'Arial Narrow', sans-serif;
+font-weight: 400;
+letter-spacing: 0.02em;
+margin: 0;
+}
+
+/* Los botones heredan la tipografía y muestran que son interactivos. */
+button { font-family: inherit; cursor: pointer; }
+
+/* ===== Hero ===== */
+.hero {
+position: relative;
+width: 100%;
+/* min-height deja que la portada crezca si su contenido lo necesita. */
+min-height: 100vh;
+min-height: 100dvh;
+/* Recorta solo las imágenes y efectos que sobresalen de la portada. */
+overflow: hidden;
+background: #C45A18;
+}
+
+/*
+ * Esta sección aparece debajo de la portada y crea el desplazamiento vertical.
+ * Cambia 70vh para hacerla más alta o más corta, o añade más secciones con
+ * la misma estructura en index.html para continuar extendiendo la página.
+ */
+.next-section {
+min-height: 70vh;
+padding: 72px 44px;
+background: #17110e;
+color: var(--cream);
+}
+
+.next-section h2 {
+font-size: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.next-section p {
+max-width: 560px;
+margin: 18px 0 0;
+color: var(--muted);
+line-height: 1.6;
+}
+
+.hero-base-img {
+/* Capa de imagen inferior que cubre toda la portada. */
+position: absolute;
+inset: 0;
+z-index: 1;
+background-size: cover;
+background-position: center center;
+}
+
+.hero-reveal-img {
+/* Capa superior revelada por la máscara circular controlada desde script.js. */
+position: absolute;
+inset: 0;
+z-index: 2;
+pointer-events: none;
+background-size: cover;
+background-position: center center;
+-webkit-mask-image: radial-gradient(circle 0px at -999px -999px, #fff, transparent);
+mask-image: radial-gradient(circle 0px at -999px -999px, #fff, transparent);
+}
+
+.hero-ui {
+/* Rejilla de textos y controles situada sobre las imágenes. */
+position: absolute;
+inset: 0;
+z-index: 8;
+display: grid;
+grid-template-columns: 1fr 1fr;
+grid-template-rows: auto 1fr auto;
+padding: 36px 44px 40px;
+pointer-events: none;
+}
+
+/* ===== Left column ===== */
+.hero-left {
+grid-column: 1;
+grid-row: 1 / -1;
+display: flex;
+flex-direction: column;
+justify-content: space-between;
+align-items: flex-start;
+gap: 28px;
+min-width: 0;
+}
+
+.hero-copy {
+/* Bloque del título, descripción y botones. */
+max-width: 520px;
+padding-right: 56px;
+pointer-events: auto;
+}
+
+.hero-copy h1 {
+font-size: clamp(1.55rem, 3.6vw, 3.15rem);
+line-height: 1.05;
+text-transform: uppercase;
+color: var(--cream);
+text-shadow: 0 2px 28px rgba(0,0,0,0.22);
+}
+
+.hero-copy h1 > span {
+display: block;
+}
+
+.hero-copy p {
+margin-top: 18px;
+max-width: 340px;
+font-size: 13.5px;
+font-weight: 400;
+line-height: 1.55;
+color: var(--muted);
+}
+
+.icon-row {
+/* Agrupa los botones circulares de la portada. */
+display: flex;
+gap: 10px;
+margin-top: 22px;
+}
+
+.icon-btn {
+/* Botón de icono. Cambia width y height para modificar su tamaño. */
+width: 38px;
+height: 38px;
+border-radius: 50%;
+border: 1px solid rgba(251,219,175,0.55);
+background: transparent;
+color: var(--cream);
+display: grid;
+place-items: center;
+transition: background 0.25s ease, border-color 0.25s ease;
+}
+
+.icon-btn:hover {
+background: rgba(251,219,175,0.1);
+border-color: var(--cream);
+}
+
+.icon-btn:focus-visible {
+outline: 2px solid var(--cream);
+outline-offset: 2px;
+}
+
+.icon-btn svg {
+width: 16px;
+height: 16px;
+stroke: currentColor;
+stroke-width: 1.2;
+fill: none;
+}
+
+/* ===== Product card ===== */
+.product-card {
+/* Tarjeta compacta de producto con imagen, descripción y acción. */
+pointer-events: auto;
+width: min(320px, 100%);
+display: grid;
+grid-template-columns: 86px 1fr;
+grid-template-rows: auto auto;
+gap: 10px 14px;
+padding: 12px;
+border-radius: 18px;
+background: var(--card);
+backdrop-filter: blur(18px);
+-webkit-backdrop-filter: blur(18px);
+border: 1px solid rgba(251,219,175,0.08);
+box-shadow: 0 18px 50px rgba(0,0,0,0.28);
+}
+
+.product-thumb {
+/* Imagen del producto; la URL se define en el atributo style del HTML. */
+grid-column: 1;
+grid-row: 1 / -1;
+width: 86px;
+min-height: 86px;
+border-radius: 12px;
+overflow: hidden;
+background-size: cover;
+background-position: center center;
+}
+
+.product-body {
+grid-column: 2;
+grid-row: 1;
+}
+
+.product-body h2 {
+font-size: 11px;
+line-height: 1.25;
+text-transform: uppercase;
+color: var(--cream);
+}
+
+.product-body p {
+margin: 6px 0 0;
+font-size: 11.5px;
+line-height: 1.45;
+color: var(--muted);
+}
+
+.cart-btn {
+/* Acción principal de la tarjeta. Cambia padding y font-size para ajustarla. */
+grid-column: 2;
+grid-row: 2;
+justify-self: start;
+align-self: end;
+border: 1px solid var(--cream);
+border-radius: 999px;
+padding: 7px 16px;
+font-size: 12px;
+font-weight: 500;
+color: var(--cream);
+background: transparent;
+transition: border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.cart-btn:hover {
+transform: translateY(-1px);
+}
+
+.cart-btn:focus-visible {
+outline: 2px solid var(--cream);
+outline-offset: 2px;
+}
+
+/* ===== Page indicator ===== */
+.hero-page {
+/* Número de página colocado en la esquina superior derecha. */
+position: absolute;
+top: 36px;
+right: 44px;
+font-size: 13px;
+letter-spacing: 0.08em;
+color: rgba(251,219,175,0.78);
+}
+
+/* ===== Specs ===== */
+.specs {
+/* Panel de características alineado al lado derecho en pantallas grandes. */
+grid-column: 2;
+grid-row: 3;
+justify-self: end;
+pointer-events: auto;
+width: min(340px, 100%);
+}
+
+.specs h3 {
+font-size: 11px;
+text-transform: uppercase;
+margin-bottom: 14px;
+letter-spacing: 0.12em;
+}
+
+.spec-row {
+display: flex;
+justify-content: space-between;
+align-items: baseline;
+gap: 16px;
+padding: 7px 0;
+}
+
+.spec-row + .spec-row {
+border-top: 1px solid rgba(251,219,175,0.12);
+}
+
+.spec-label {
+font-size: 11px;
+letter-spacing: 0.08em;
+text-transform: uppercase;
+color: var(--label);
+}
+
+.spec-value {
+font-size: 12.5px;
+color: var(--cream);
+text-align: right;
+white-space: nowrap;
+}
+
+/* ===== Animaciones =====
+ * Las clases .fade-up-reveal y .words-pull-up se activan desde script.js.
+ */
+@keyframes heroImageIn {
+from { opacity: 0; transform: scale(1.18); }
+to { opacity: 1; transform: scale(1); }
+}
+
+.hero-image-animate {
+opacity: 0;
+animation: heroImageIn 1.2s cubic-bezier(0.25,0.46,0.45,0.94) forwards;
+animation-delay: 0.15s;
+}
+
+@keyframes wordPullUp {
+from { opacity: 0; transform: translateY(20px); }
+to { opacity: 1; transform: translateY(0); }
+}
+
+.pull-word {
+display: inline-block;
+opacity: 0;
+transform: translateY(20px);
+}
+
+.pull-word:not(:last-child) {
+margin-right: 0.3em;
+}
+
+.words-visible .pull-word {
+animation: wordPullUp 0.55s ease forwards;
+}
+
+@keyframes fadeUp {
+from { opacity: 0; transform: translateY(14px); filter: blur(8px); }
+to { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+
+.fade-up-reveal {
+opacity: 0;
+transform: translateY(14px);
+filter: blur(8px);
+}
+
+.fade-up-reveal.is-visible {
+animation: fadeUp 0.7s ease forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+/* Respeta la preferencia del sistema para reducir movimiento y mareo. */
+.hero-image-animate,
+.pull-word,
+.words-visible .pull-word,
+.fade-up-reveal,
+.fade-up-reveal.is-visible {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+}
+}
+
+/* ===== Diseño responsive =====
+ * Estos bloques adaptan espacios, tamaños y distribución a tabletas y móviles.
+ * Cambia los valores max-width si quieres que el cambio ocurra en otro ancho.
+ */
+@media (max-width: 1024px) {
+.hero-ui { padding: 32px 28px 36px; }
+.hero-page { top: 32px; right: 28px; }
+.specs { width: min(300px, 100%); }
+}
+
+@media (max-width: 900px) {
+.hero-ui { padding: 28px 22px 28px; }
+.hero-page { top: 28px; right: 22px; }
+.hero-copy h1 { font-size: clamp(1.35rem, 7.2vw, 2.4rem); }
+.hero-base-img, .hero-reveal-img { background-position: 40% center; }
+.specs { width: min(280px, 100%); }
+}
+
+@media (max-width: 768px) {
+.hero-ui {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr auto;
+    padding: max(24px, env(safe-area-inset-top)) max(20px, env(safe-area-inset-right)) max(28px, env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left));
+}
+.hero-left {
+    grid-column: 1;
+    grid-row: 1 / 3;
+    gap: 24px;
+}
+.hero-page {
+    top: max(24px, env(safe-area-inset-top));
+    right: max(20px, env(safe-area-inset-right));
+}
+.specs {
+    grid-column: 1;
+    grid-row: 3;
+    justify-self: stretch;
+    width: 100%;
+    margin-top: 8px;
+}
+.hero-base-img, .hero-reveal-img { background-position: 40% center; }
+}
+
+@media (max-width: 720px) {
+.hero {
+    height: auto;
+    min-height: 100vh;
+    min-height: 100dvh;
+}
+.hero-ui {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    min-height: 100dvh;
+    justify-content: flex-start;
+    gap: 28px;
+    padding: max(22px, env(safe-area-inset-top)) max(18px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom)) max(18px, env(safe-area-inset-left));
+}
+.hero-left {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    justify-content: flex-start;
+}
+.hero-copy {
+    max-width: 100%;
+    padding-right: 48px;
+}
+.hero-copy p {
+    font-size: 12.5px;
+    max-width: 100%;
+}
+.product-card { width: 100%; }
+.specs {
+    width: 100%;
+    margin-top: auto;
+    padding-top: 4px;
+}
+.spec-value { white-space: normal; }
+.hero-base-img, .hero-reveal-img {
+    position: absolute;
+    background-position: 40% center;
+}
+}
+
+@media (max-width: 480px) {
+.hero-ui { gap: 22px; padding: max(18px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(20px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left)); }
+.hero-page { font-size: 12px; }
+.hero-copy h1 { font-size: clamp(1.1rem, 8.5vw, 1.65rem); }
+.hero-copy p { font-size: 12px; margin-top: 14px; }
+.icon-row { margin-top: 16px; gap: 8px; }
+.icon-btn { width: 34px; height: 34px; }
+.hero-left { gap: 22px; }
+.product-card {
+    grid-template-columns: 72px 1fr;
+    gap: 8px 12px;
+    padding: 10px;
+    border-radius: 14px;
+}
+.product-thumb { width: 72px; min-height: 72px; border-radius: 10px; }
+.product-body h2 { font-size: 10px; }
+.product-body p { font-size: 11px; }
+.cart-btn { padding: 6px 14px; font-size: 11px; }
+.specs h3 { font-size: 10px; margin-bottom: 10px; }
+.spec-row { padding: 6px 0; gap: 10px; }
+.spec-label, .spec-value { font-size: 11px; }
+}
+
+@media (max-width: 360px) {
+.hero-copy h1 { font-size: 1rem; }
+.product-card { grid-template-columns: 64px 1fr; }
+.product-thumb { width: 64px; min-height: 64px; }
+}
