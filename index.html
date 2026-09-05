@@ -2,145 +2,680 @@
 <html lang="es">
 
 <head>
-<!-- Configuración básica de idioma, caracteres y adaptación a móviles. -->
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Cyber Ronin // Neural Edges</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Cyber Ronin Tech // Tienda de Tecnología de Vanguardia</title>
 
-<!-- style.css contiene todos los estilos visuales de la página. -->
-<link rel="stylesheet" href="style.css">
-<!-- defer espera a que se lea el HTML antes de ejecutar script.js. -->
-<script src="script.js" defer></script>
+  <!-- Google Fonts: Orbitron & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@500;700;800;900&display=swap" rel="stylesheet">
 
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
 </head>
 
 <body>
 
-  <!-- Portada principal. Su altura mínima es una pantalla completa. -->
-  <main class="hero">
+  <!-- ===== HEADER / NAVEGACIÓN STICKY ===== -->
+  <header class="site-header" id="site-header">
+    <div class="header-container">
+      <a href="#hero" class="brand-logo">
+        <span class="logo-icon">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+            <polyline points="2 17 12 22 22 17"></polyline>
+            <polyline points="2 12 12 17 22 12"></polyline>
+          </svg>
+        </span>
+        <span class="logo-text">RONIN<span class="accent-text">//TECH</span></span>
+      </a>
 
-    <!-- Imagen inferior: cambia la ruta para usar otra imagen de fondo. -->
-    <div class="hero-base-img hero-image-animate" style="background-image:url('img/fondo-base.jpg');"></div>
+      <nav class="nav-menu">
+        <a href="#hero" class="nav-link active">Inicio</a>
+        <a href="#catalogo" class="nav-link">Catálogo</a>
+        <a href="#ofertas" class="nav-link">Ofertas</a>
+        <a href="#comparativa" class="nav-link">Comparativa</a>
+        <a href="#resenas" class="nav-link">Reseñas</a>
+        <a href="#faq" class="nav-link">FAQ</a>
+      </nav>
 
-    <!-- Imagen superior. script.js muestra una parte circular siguiendo el cursor. -->
-    <div class="hero-reveal-img" id="reveal-img" style="background-image:url('img/fondo-reveal.jpg');"></div>
+      <div class="header-actions">
+        <div class="search-box">
+          <svg class="search-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" id="header-search" placeholder="Buscar tecnología..." aria-label="Buscar tecnología">
+        </div>
 
-    <!-- Interfaz colocada encima de las imágenes. -->
-    <div class="hero-ui">
+        <button class="cart-trigger" id="cart-trigger" aria-label="Ver Carrito de Compras">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <path d="M16 10a4 4 0 0 1-8 0"></path>
+          </svg>
+          <span class="cart-badge" id="cart-badge">0</span>
+        </button>
 
-      <!-- Contenido de la columna izquierda: texto y producto destacado. -->
-      <div class="hero-left">
-        <div class="hero-copy">
-          <!-- words-pull-up divide el texto en palabras y anima cada una. -->
-          <h1 class="words-pull-up">
-            <span>RONIN-X //</span>
-            <span>SHADOW</span>
-            <span>NIGHTFALL</span>
-          </h1>
-          <!-- fade-up-reveal aparece al entrar en pantalla; data-delay está en segundos. -->
-          <p class="fade-up-reveal" data-delay="0.5">Cultivated with high-res optics and a zero-gravity frame for those who don't just watch the future—they wield it. Shift your reality.</p>
+        <button class="mobile-toggle" id="mobile-toggle" aria-label="Abrir Menú Navegación">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
 
-          <!-- Para añadir otro botón, copia un button.icon-btn dentro de este bloque. -->
-          <div class="icon-row fade-up-reveal" data-delay="0.65">
+  <!-- ===== PORTADA HERO (SPOTLIGHT INTERACTIVO) ===== -->
+  <main>
+    <section class="hero" id="hero">
+      <!-- Imagen de fondo base -->
+      <div class="hero-base-img hero-image-animate" style="background-image:url('img/fondo-base.jpg');"></div>
 
-            <!--
-              Botón 1: icono de núcleo principal.
-              Cambia aria-label para describirlo a lectores de pantalla y modifica
-              la ruta <path> o el <circle> para cambiar el dibujo del icono.
-              Para ejecutar una acción al pulsarlo, añade por ejemplo:
-              onclick="alert('Núcleo principal')" o conecta un evento en script.js.
-            -->
-            <button class="icon-btn" aria-label="Main core" type="button">
-              <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                <!-- Hexágono exterior del núcleo. -->
-                <path d="M8 1.4L13.8 4.7V11.3L8 14.6L2.2 11.3V4.7L8 1.4Z"/>
-                <!-- Punto central del icono. -->
-                <circle cx="8" cy="8" r="1.35" fill="currentColor" stroke="none"/>
-              </svg>
-            </button>
+      <!-- Imagen superior revelada por cursor linterna -->
+      <div class="hero-reveal-img" id="reveal-img" style="background-image:url('img/fondo-reveal.jpg');"></div>
 
-            <!--
-              Botón 2: icono de visión o enfoque.
-              Cambia aria-label="Vision" por el nombre de tu acción. Para cambiar
-              el tamaño del dibujo, modifica viewBox o las coordenadas del SVG.
-            -->
-            <button class="icon-btn" aria-label="Vision" type="button">
-              <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                <!-- Esquinas que representan un marco de enfoque. -->
-                <path d="M2 5.2V2h3.2" stroke-linecap="round"/>
-                <path d="M14 5.2V2h-3.2" stroke-linecap="round"/>
-                <path d="M2 10.8V14h3.2" stroke-linecap="round"/>
-                <path d="M14 10.8V14h-3.2" stroke-linecap="round"/>
-                <!-- Cuadro central de la visión. -->
-                <rect x="5.2" y="5.2" width="5.6" height="5.6"/>
-              </svg>
-            </button>
+      <!-- Interfaz superpuesta -->
+      <div class="hero-ui">
+        <div class="hero-left">
+          <div class="hero-copy">
+            <div class="hero-tag fade-up-reveal" data-delay="0.2">✨ NUEVA GENERACIÓN NEURAL 2026</div>
+            <h1 class="words-pull-up">
+              <span>RONIN-X //</span>
+              <span>SHADOW</span>
+              <span>NIGHTFALL</span>
+            </h1>
+            <p class="fade-up-reveal" data-delay="0.5">Diseño cibernético avanzado con óptica 8K pulse, armazón de gravedad cero y motor neuronal R1. Experimenta el futuro de la tecnología hoy.</p>
 
-            <!--
-              Botón 3: icono de fuerza o energía.
-              Sustituye el atributo d del <path> por otro trazado SVG para usar
-              un icono diferente. Conserva class="icon-btn" para mantener el estilo.
-            -->
-            <button class="icon-btn" aria-label="Force" type="button">
-              <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                <!-- Silueta de rayo. -->
-                <path d="M9.2 1.6L4 9.1h3.5L6.8 14.4 12 6.9H8.5L9.2 1.6Z" stroke-linejoin="round"/>
-              </svg>
-            </button>
-            
+            <div class="hero-buttons fade-up-reveal" data-delay="0.65">
+              <a href="#catalogo" class="btn-primary">
+                <span>Explorar Catálogo</span>
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </a>
+              <a href="#ofertas" class="btn-secondary">Ofertas Especiales</a>
+            </div>
+
+            <div class="icon-row fade-up-reveal" data-delay="0.75">
+              <button class="icon-btn" aria-label="Procesamiento Neuronal" title="Procesamiento Neuronal">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor">
+                  <path d="M8 1.4L13.8 4.7V11.3L8 14.6L2.2 11.3V4.7L8 1.4Z"/>
+                  <circle cx="8" cy="8" r="1.35" fill="currentColor" stroke="none"/>
+                </svg>
+              </button>
+
+              <button class="icon-btn" aria-label="Visión Optimizada 8K" title="Visión Optimizada 8K">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor">
+                  <path d="M2 5.2V2h3.2" stroke-linecap="round"/>
+                  <path d="M14 5.2V2h-3.2" stroke-linecap="round"/>
+                  <path d="M2 10.8V14h3.2" stroke-linecap="round"/>
+                  <path d="M14 10.8V14h-3.2" stroke-linecap="round"/>
+                  <rect x="5.2" y="5.2" width="5.6" height="5.6"/>
+                </svg>
+              </button>
+
+              <button class="icon-btn" aria-label="Batería Cuántica" title="Batería Cuántica">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor">
+                  <path d="M9.2 1.6L4 9.1h3.5L6.8 14.4 12 6.9H8.5L9.2 1.6Z" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Tarjeta de producto destacado en Hero -->
+          <article class="product-card">
+            <div class="product-thumb" style="background-image:url('img/cyber_glasses.png');"></div>
+            <div class="product-body">
+              <span class="product-badge-mini">MÁS VENDIDO</span>
+              <h2>CR-01: CYBER FRAME</h2>
+              <p>Óptica de precisión 8K, cuadro ultraligero de titanio y conexión neural instantánea.</p>
+              <div class="product-price-mini">$499 USD <del>$650</del></div>
+            </div>
+            <button class="cart-btn fade-up-reveal" data-delay="1.15" onclick="addToCartById('p1')">Añadir al Carrito</button>
+          </article>
+        </div>
+
+        <div class="hero-page fade-up-reveal" data-delay="0.75">EDICIÓN // 2026</div>
+
+        <div class="specs">
+          <h3 class="words-pull-up">Especificaciones Destacadas</h3>
+          <div class="spec-row fade-up-reveal" data-delay="1.2">
+            <span class="spec-label">Visión</span>
+            <span class="spec-value">Dual 8K Pulse-OLED</span>
+          </div>
+          <div class="spec-row fade-up-reveal" data-delay="1.3">
+            <span class="spec-label">Núcleo</span>
+            <span class="spec-value">Chip Neural R1 Quantum</span>
+          </div>
+          <div class="spec-row fade-up-reveal" data-delay="1.4">
+            <span class="spec-label">Refresco</span>
+            <span class="spec-value">144Hz Latencia Cero</span>
+          </div>
+          <div class="spec-row fade-up-reveal" data-delay="1.5">
+            <span class="spec-label">Batería</span>
+            <span class="spec-value">48 Horas Continuas</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== BARRA DE BENEFICIOS / PROPUESTA DE VALOR ===== -->
+    <section class="trust-banner">
+      <div class="trust-grid">
+        <div class="trust-item">
+          <div class="trust-icon">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="1" y="3" width="15" height="13"></rect>
+              <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+              <circle cx="5.5" cy="18.5" r="2.5"></circle>
+              <circle cx="18.5" cy="18.5" r="2.5"></circle>
+            </svg>
+          </div>
+          <div class="trust-text">
+            <h4>Envío Exprés 24/48h</h4>
+            <p>Envío gratuito nacional en compras superiores a $150 USD</p>
           </div>
         </div>
 
-        <!-- Tarjeta de producto: reemplaza la URL de product-thumb para cambiar su imagen. -->
-        <article class="product-card">
-          <div class="product-thumb" aria-hidden="true" style="background-image:url('https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260831_121937_3f02b5a0-5b86-43d9-b30e-03c5e46632e7.png&w=1920&q=85');"></div>
-          <div class="product-body">
-            <h2 class="words-pull-up">CR-01: CYBER FRAME</h2>
-            <p class="fade-up-reveal" data-delay="1.05">Precision-grade optics and a light frame for comfort and clarity.</p>
+        <div class="trust-item">
+          <div class="trust-icon">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
           </div>
-          <button class="cart-btn fade-up-reveal" data-delay="1.15">Reserve Now</button>
+          <div class="trust-text">
+            <h4>Garantía Oficial 2 Años</h4>
+            <p>Cobertura total y servicio técnico certificado</p>
+          </div>
+        </div>
+
+        <div class="trust-item">
+          <div class="trust-icon">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+              <line x1="1" y1="10" x2="23" y2="10"></line>
+            </svg>
+          </div>
+          <div class="trust-text">
+            <h4>Pagos Seguros & Cripto</h4>
+            <p>Tarjetas de crédito, PayPal y Bitcoin/USDT aceptados</p>
+          </div>
+        </div>
+
+        <div class="trust-item">
+          <div class="trust-icon">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+            </svg>
+          </div>
+          <div class="trust-text">
+            <h4>Soporte Técnico 24/7</h4>
+            <p>Atención directa por especialistas en tecnología</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== CATÁLOGO DE PRODUCTOS DE TECNOLOGÍA ===== -->
+    <section class="catalog-section" id="catalogo">
+      <div class="section-header">
+        <div class="section-tag">TIENDA ONLINE</div>
+        <h2>Catálogo de Tecnología Futura</h2>
+        <p>Explora dispositivos de última generación, wearables neuronales, laptops cuánticas y gadgets de sonido avanzado.</p>
+      </div>
+
+      <!-- Barra de Filtros y Búsqueda -->
+      <div class="catalog-controls">
+        <div class="filter-tabs">
+          <button class="filter-tab active" data-category="all">Todos los Productos</button>
+          <button class="filter-tab" data-category="wearables">VR & Wearables</button>
+          <button class="filter-tab" data-category="smartphones">Smartphones</button>
+          <button class="filter-tab" data-category="laptops">Laptops</button>
+          <button class="filter-tab" data-category="audio">Audio High-End</button>
+        </div>
+
+        <div class="sort-wrapper">
+          <label for="sort-select">Ordenar por:</label>
+          <select id="sort-select" class="sort-select">
+            <option value="featured">Destacados</option>
+            <option value="price-low">Precio: Menor a Mayor</option>
+            <option value="price-high">Precio: Mayor a Menor</option>
+            <option value="rating">Mejor Valorados</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Grid dinámico de productos -->
+      <div class="products-grid" id="products-grid">
+        <!-- Generado dinámicamente desde script.js -->
+      </div>
+    </section>
+
+    <!-- ===== SECCIÓN DE OFERTA RELÁMPAGO / DEAL OF THE DAY ===== -->
+    <section class="deal-section" id="ofertas">
+      <div class="deal-container">
+        <div class="deal-content">
+          <div class="deal-badge">🔥 OFERTA RELÁMPAGO // 30% OFF</div>
+          <h2>RONIN VR-X PRO EDITION</h2>
+          <p>Visor Inmersivo con retroalimentación háptica de cuerpo completo, renderizado foveado y tasa de refresco de 180Hz. Edición especial de coleccionista con acabados metálicos.</p>
+
+          <div class="deal-timer-wrapper">
+            <span class="timer-label">La oferta termina en:</span>
+            <div class="deal-timer" id="deal-timer">
+              <div class="time-unit"><span id="hours">08</span><small>Horas</small></div>
+              <div class="time-colon">:</div>
+              <div class="time-unit"><span id="minutes">42</span><small>Min</small></div>
+              <div class="time-colon">:</div>
+              <div class="time-unit"><span id="seconds">19</span><small>Seg</small></div>
+            </div>
+          </div>
+
+          <div class="deal-price">
+            <span class="current-price">$899 USD</span>
+            <span class="old-price">$1,299 USD</span>
+            <span class="save-tag">Ahorra $400 USD</span>
+          </div>
+
+          <div class="deal-actions">
+            <button class="btn-primary" onclick="addToCartById('p1')">Comprar Ahora con Descuento</button>
+            <button class="btn-secondary" onclick="openQuickView('p1')">Ver Detalles Completo</button>
+          </div>
+        </div>
+
+        <div class="deal-media">
+          <div class="deal-img-card" style="background-image:url('img/cyber_glasses.png');">
+            <span class="stock-indicator">Quedan solo 7 unidades</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== MATRIZ COMPARATIVA DE TECNOLOGÍA ===== -->
+    <section class="comparison-section" id="comparativa">
+      <div class="section-header">
+        <div class="section-tag">COMPARATIVA TÉCNICA</div>
+        <h2>Encuentra tu Equipo Ideal</h2>
+        <p>Compara las especificaciones clave de nuestras tres líneas de flagship para elegir el rendimiento perfecto para ti.</p>
+      </div>
+
+      <div class="table-responsive">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Característica</th>
+              <th>Ronin-X Glasses</th>
+              <th>CyberPhone Quantum</th>
+              <th>Blade-17 Quantum Laptop</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="feature-title">Procesador</td>
+              <td>Chip Neural R1 Quantum</td>
+              <td>Octa-Core CyberSOC 3.4GHz</td>
+              <td>Tensor Neural Core i9 16-Core</td>
+            </tr>
+            <tr>
+              <td class="feature-title">Pantalla / Optica</td>
+              <td>Dual 8K Pulse-OLED (144Hz)</td>
+              <td>6.8" AMOLED 165Hz HDR10+</td>
+              <td>17.3" QHD 240Hz Mini-LED</td>
+            </tr>
+            <tr>
+              <td class="feature-title">Memoria / Almacenamiento</td>
+              <td>16GB Direct-RAM / 512GB</td>
+              <td>24GB LPDDR5X / 1TB NVMe</td>
+              <td>64GB DDR5 / 2TB NVMe Gen4</td>
+            </tr>
+            <tr>
+              <td class="feature-title">Autonomía</td>
+              <td>48 horas continuas</td>
+              <td>5,500 mAh (Carga 120W)</td>
+              <td>99.9Wh (Carga Rápida 280W)</td>
+            </tr>
+            <tr>
+              <td class="feature-title">Materiales</td>
+              <td>Titanio Grado 5 & Carbono</td>
+              <td>Cristal de Zafiro y Aleación</td>
+              <td>Chasis de Magnesio Anodizado</td>
+            </tr>
+            <tr>
+              <td class="feature-title">Precio</td>
+              <td><strong class="price-text">$499 USD</strong></td>
+              <td><strong class="price-text">$899 USD</strong></td>
+              <td><strong class="price-text">$1,899 USD</strong></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td><button class="btn-table" onclick="addToCartById('p1')">Añadir al Carrito</button></td>
+              <td><button class="btn-table" onclick="addToCartById('p2')">Añadir al Carrito</button></td>
+              <td><button class="btn-table" onclick="addToCartById('p3')">Añadir al Carrito</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ===== RESEÑAS DE COMPRADORES VERIFICADOS ===== -->
+    <section class="reviews-section" id="resenas">
+      <div class="section-header">
+        <div class="section-tag">TESTIMONIOS REALES</div>
+        <h2>Experiencias de Nuestros Clientes</h2>
+        <p>Descubre cómo la tecnología de Cyber Ronin ha transformado la productividad y el entretenimiento de nuestros compradores.</p>
+      </div>
+
+      <div class="reviews-grid">
+        <article class="review-card">
+          <div class="review-header">
+            <div class="stars">★★★★★</div>
+            <span class="verified-badge">✓ Compra Verificada</span>
+          </div>
+          <p class="review-body">"Los visores Ronin-X son increíbles. La calidad visual 8K y la latencia casi nula hacen que trabajar en entornos virtuales sea extremadamente cómodo. La entrega tardó solo 24 horas."</p>
+          <div class="review-author">
+            <div class="author-avatar">MA</div>
+            <div class="author-info">
+              <strong>Marco Antonio V.</strong>
+              <small>Desarrollador Senior & Gamer</small>
+            </div>
+          </div>
+        </article>
+
+        <article class="review-card">
+          <div class="review-header">
+            <div class="stars">★★★★★</div>
+            <span class="verified-badge">✓ Compra Verificada</span>
+          </div>
+          <p class="review-body">"El CyberPhone Quantum supera con creces a cualquier gama alta tradicional. La pantalla de 165Hz es mantequilla pura y la batería me dura casi dos días con uso intenso."</p>
+          <div class="review-author">
+            <div class="author-avatar">CL</div>
+            <div class="author-info">
+              <strong>Carla L.</strong>
+              <small>Creadora de Contenido Tech</small>
+            </div>
+          </div>
+        </article>
+
+        <article class="review-card">
+          <div class="review-header">
+            <div class="stars">★★★★★</div>
+            <span class="verified-badge">✓ Compra Verificada</span>
+          </div>
+          <p class="review-body">"Compré los auriculares Pulse ANC y el aislamiento de sonido es surrealista. Los tonos graves y agudos tienen una precisión de estudio profesional. 100% recomendados."</p>
+          <div class="review-author">
+            <div class="author-avatar">RD</div>
+            <div class="author-info">
+              <strong>Roberto D.</strong>
+              <small>Productor Musical</small>
+            </div>
+          </div>
         </article>
       </div>
+    </section>
 
-      <!-- Indicador de página. Cambia el texto 1/26 directamente aquí. -->
-      <div class="hero-page fade-up-reveal" data-delay="0.75">1/26</div>
+    <!-- ===== PREGUNTAS FRECUENTES (FAQ) ===== -->
+    <section class="faq-section" id="faq">
+      <div class="section-header">
+        <div class="section-tag">RESOLVEMOS TUS DUDAS</div>
+        <h2>Preguntas Frecuentes</h2>
+        <p>Todo lo que necesitas saber sobre envíos, garantías, pagos y soporte técnico.</p>
+      </div>
 
-      <!-- Lista de especificaciones. Duplica un spec-row para añadir otra. -->
-      <div class="specs">
-        <h3 class="words-pull-up">Operative Specs</h3>
-        <div class="spec-row fade-up-reveal" data-delay="1.2">
-          <span class="spec-label">Vision</span>
-          <span class="spec-value">Dual 8K Pulse-OLED</span>
+      <div class="faq-accordion">
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span>¿Cuáles son los plazos de entrega y costos de envío?</span>
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </summary>
+          <div class="faq-answer">
+            <p>Realizamos envíos exprés a todo el país en un plazo de 24 a 48 horas laborables. El envío es completamente gratuito para compras superiores a $150 USD. Todos los paquetes cuentan con número de rastreo satelital en tiempo real.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span>¿Qué garantía ofrecen en sus productos tecnológicos?</span>
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </summary>
+          <div class="faq-answer">
+            <p>Todos nuestros productos cuentan con garantía oficial directa de fábrica por 2 años contra defectos de fabricación y hardware. Además, ofrecemos 30 días de garantía de satisfacción total o devolución de dinero.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span>¿Puedo pagar con tarjetas de crédito, PayPal o Criptomonedas?</span>
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </summary>
+          <div class="faq-answer">
+            <p>Aceptamos todas las tarjetas de crédito principales (Visa, Mastercard, American Express), pagos seguros vía PayPal, Apple Pay, así como pagos en criptomonedas (Bitcoin, Ethereum, USDT) con 5% de descuento adicional automático.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span>¿Tienen servicio de soporte técnico especializado?</span>
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </summary>
+          <div class="faq-answer">
+            <p>Sí, disponemos de un equipo de ingenieros y especialistas disponibles 24/7 para asistirte con la configuración inicial, actualizaciones de firmware y resolución de problemas técnicos.</p>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- ===== NEWSLETTER DE DESCUENTO ===== -->
+    <section class="newsletter-section">
+      <div class="newsletter-card">
+        <div class="newsletter-content">
+          <h3>Únete a la Red Cyber Ronin</h3>
+          <p>Suscríbete para recibir lanzamientos exclusivos, ofertas relámpago privadas y un <strong>15% de descuento directo</strong> en tu primera compra.</p>
+          <form class="newsletter-form" id="newsletter-form">
+            <input type="email" placeholder="Ingresa tu correo electrónico..." required aria-label="Correo electrónico">
+            <button type="submit" class="btn-primary">Obtener Descuento</button>
+          </form>
         </div>
-        <div class="spec-row fade-up-reveal" data-delay="1.3">
-          <span class="spec-label">Nerve</span>
-          <span class="spec-value">R1 - Ronin Engines</span>
-        </div>
-        <div class="spec-row fade-up-reveal" data-delay="1.4">
-          <span class="spec-label">Reflex</span>
-          <span class="spec-value">144Hz Low-Lag Ops</span>
-        </div>
-        <div class="spec-row fade-up-reveal" data-delay="1.5">
-          <span class="spec-label">Armor</span>
-          <span class="spec-value">Lightweight Shadow Shell</span>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== FOOTER COMPLETOS DE E-COMMERCE ===== -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-col brand-col">
+        <a href="#hero" class="brand-logo">
+          <span class="logo-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+              <polyline points="2 17 12 22 22 17"></polyline>
+              <polyline points="2 12 12 17 22 12"></polyline>
+            </svg>
+          </span>
+          <span class="logo-text">RONIN<span class="accent-text">//TECH</span></span>
+        </a>
+        <p>Líderes en tecnología de vanguardia, hardware neuronal y dispositivos cibernéticos de máxima fidelidad.</p>
+        <div class="payment-badges">
+          <span class="badge-pay">VISA</span>
+          <span class="badge-pay">MC</span>
+          <span class="badge-pay">PAYPAL</span>
+          <span class="badge-pay">BTC</span>
+          <span class="badge-pay">APPLE PAY</span>
         </div>
       </div>
 
+      <div class="footer-col">
+        <h4>Navegación</h4>
+        <ul>
+          <li><a href="#hero">Inicio</a></li>
+          <li><a href="#catalogo">Catálogo de Productos</a></li>
+          <li><a href="#ofertas">Ofertas Especiales</a></li>
+          <li><a href="#comparativa">Comparativa Técnica</a></li>
+          <li><a href="#resenas">Reseñas de Clientes</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Categorías</h4>
+        <ul>
+          <li><a href="#catalogo">Visores VR & Wearables</a></li>
+          <li><a href="#catalogo">Smartphones Cibernéticos</a></li>
+          <li><a href="#catalogo">Laptops Cuánticas</a></li>
+          <li><a href="#catalogo">Audio Hi-Fi & Cancelling</a></li>
+          <li><a href="#catalogo">Accesorios & Hubs AI</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Contacto & Soporte</h4>
+        <p>Email: soporte@cyberronin-tech.com</p>
+        <p>Teléfono: +1 (800) 987-RONIN</p>
+        <p>Horario: Atencion 24/7 Red Neuronal</p>
+      </div>
     </div>
 
-  </main>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Cyber Ronin Tech Inc. Todos los derechos reservados.</p>
+      <div class="legal-links">
+        <a href="#">Términos y Condiciones</a>
+        <a href="#">Política de Privacidad</a>
+        <a href="#">Garantía & Devoluciones</a>
+      </div>
+    </div>
+  </footer>
 
-<!--
-  Todo lo que coloques después de .hero queda debajo de la portada y se puede
-  visitar desplazando la página hacia abajo. Para crear otra parte, copia este
-  bloque, cambia su clase y añade los estilos correspondientes en style.css.
--->
-<!-- Sección posterior: todo lo que se añada debajo continúa el scroll vertical. -->
-<section class="next-section">
-  <h2>Continue exploring</h2>
-  <p>Descubre más detalles del diseño y las capacidades de la nueva generación.</p>
-</section>
+  <!-- ===== MODAL / SLIDE-OVER DRAWER DE CARRITO DE COMPRAS ===== -->
+  <div class="cart-overlay" id="cart-overlay"></div>
+  <aside class="cart-drawer" id="cart-drawer" aria-label="Carrito de Compras">
+    <div class="cart-header">
+      <div class="cart-title">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <path d="M16 10a4 4 0 0 1-8 0"></path>
+        </svg>
+        <h3>Tu Carrito (<span id="cart-drawer-count">0</span>)</h3>
+      </div>
+      <button class="close-btn" id="close-cart" aria-label="Cerrar Carrito">&times;</button>
+    </div>
 
+    <div class="cart-items" id="cart-items">
+      <!-- Generado dinámicamente -->
+    </div>
+
+    <div class="cart-footer">
+      <div class="coupon-wrapper">
+        <input type="text" id="coupon-input" placeholder="Código de Cupón (ej: NEURAL20)">
+        <button type="button" id="apply-coupon-btn" class="btn-small">Aplicar</button>
+      </div>
+
+      <div class="summary-line">
+        <span>Subtotal:</span>
+        <span id="cart-subtotal">$0 USD</span>
+      </div>
+      <div class="summary-line" id="discount-row" style="display:none; color:#10B981;">
+        <span>Descuento Aplicado:</span>
+        <span id="cart-discount">-$0 USD</span>
+      </div>
+      <div class="summary-line">
+        <span>Envío:</span>
+        <span id="cart-shipping" style="color:#10B981;">¡GRATIS!</span>
+      </div>
+      <div class="summary-line total-line">
+        <strong>Total a Pagar:</strong>
+        <strong id="cart-total">$0 USD</strong>
+      </div>
+
+      <button type="button" class="btn-checkout" id="checkout-btn" onclick="openCheckout()">
+        Proceder al Pago Segura
+      </button>
+    </div>
+  </aside>
+
+  <!-- ===== MODAL DE VISTA RÁPIDA DE PRODUCTO (QUICK VIEW) ===== -->
+  <div class="modal-overlay" id="quickview-overlay"></div>
+  <div class="modal" id="quickview-modal">
+    <button class="modal-close" onclick="closeQuickView()">&times;</button>
+    <div class="modal-body" id="quickview-content">
+      <!-- Generado dinámicamente -->
+    </div>
+  </div>
+
+  <!-- ===== MODAL DE CHECKOUT / PROCESO DE COMPRA ===== -->
+  <div class="modal-overlay" id="checkout-overlay"></div>
+  <div class="modal checkout-modal" id="checkout-modal">
+    <button class="modal-close" onclick="closeCheckout()">&times;</button>
+    <div class="modal-body" id="checkout-content">
+      <div class="checkout-header">
+        <h3>Finalizar Compra Segura</h3>
+        <p>Ingresa tus datos para procesar la orden inmediatamente.</p>
+      </div>
+
+      <form id="checkout-form" onsubmit="processOrder(event)">
+        <div class="form-section">
+          <h4>1. Datos de Envío</h4>
+          <div class="form-grid">
+            <div class="input-group">
+              <label for="cust-name">Nombre Completo *</label>
+              <input type="text" id="cust-name" required placeholder="Ej: Alexander Ucún">
+            </div>
+            <div class="input-group">
+              <label for="cust-email">Correo Electrónico *</label>
+              <input type="email" id="cust-email" required placeholder="ejemplo@correo.com">
+            </div>
+            <div class="input-group full-width">
+              <label for="cust-address">Dirección de Entrega *</label>
+              <input type="text" id="cust-address" required placeholder="Calle, Número, Ciudad, Código Postal">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h4>2. Método de Pago</h4>
+          <div class="payment-options">
+            <label class="payment-radio">
+              <input type="radio" name="payment" value="card" checked>
+              <span>💳 Tarjeta de Crédito / Débito</span>
+            </label>
+            <label class="payment-radio">
+              <input type="radio" name="payment" value="paypal">
+              <span>🅿️ PayPal</span>
+            </label>
+            <label class="payment-radio">
+              <input type="radio" name="payment" value="crypto">
+              <span>⚡ Criptomonedas (BTC / USDT)</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-summary-box">
+          <div class="summary-line"><span>Items en pedido:</span><span id="checkout-count">0</span></div>
+          <div class="summary-line total-line"><span>Total a cobrar:</span><span id="checkout-total">$0 USD</span></div>
+        </div>
+
+        <button type="submit" class="btn-primary btn-block" id="pay-submit-btn">
+          Confirmar y Pagar Pedido
+        </button>
+      </form>
+
+      <div id="order-success" style="display: none;" class="order-success-view">
+        <div class="success-icon">✓</div>
+        <h3>¡Pedido Confirmado con Éxito!</h3>
+        <p>Gracias por tu compra en <strong>Cyber Ronin Tech</strong>. Hemos enviado el recibo y código de seguimiento a tu correo electrónico.</p>
+        <div class="tracking-box">
+          <span>Código de Rastreo Satelital:</span>
+          <strong id="tracking-code">CR-98421-NX</strong>
+        </div>
+        <button class="btn-primary" onclick="closeCheckout()">Volver a la Tienda</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contenedor para Notificaciones Toast -->
+  <div class="toast-container" id="toast-container"></div>
 
 </body>
 </html>
