@@ -3,24 +3,45 @@
 
 <head>
   <meta charset="UTF-8">
+  <!-- Configuración de Viewport Responsivo con soporte para Safe Area Insets en teléfonos con Notches -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Cyber Ronin Tech // Tienda de Tecnología de Vanguardia</title>
 
-  <!-- Google Fonts: Orbitron & Inter -->
+  <!-- 
+    ==========================================================================
+    RECURSOS EXTERNOS Y FUENTES (GOOGLE FONTS)
+    - Orbitron: Tipografía cibernética / futurista para títulos (h1, h2, h3).
+    - Inter: Tipografía sans-serif limpia para lectura fluida en descripciones.
+    ==========================================================================
+  -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@500;700;800;900&display=swap" rel="stylesheet">
 
+  <!-- Estilos visuales globales de la tienda -->
   <link rel="stylesheet" href="style.css">
+
+  <!-- Motor lógico interactivo (se ejecuta al finalizar la lectura del DOM gracias al atributo defer) -->
   <script src="script.js" defer></script>
 </head>
 
 <body>
 
-  <!-- ===== HEADER / NAVEGACIÓN STICKY ===== -->
+  <!-- 
+    ==========================================================================
+    1. SECCIÓN HEADER / NAVEGACIÓN PRINCIPAL (FIXED & GLASSMORPHISM)
+    --------------------------------------------------------------------------
+    - Propósito: Mantiene el logo, enlaces de navegación rápida, buscador en vivo,
+      botón del carrito de compras con badge dinámico y menú hamburguesa en móviles.
+    - Mantenimiento: Para agregar un nuevo enlace de menú, duplica una etiqueta <a>
+      con class="nav-link" y apunta su atributo href a la ID de la sección deseada.
+    ==========================================================================
+  -->
   <header class="site-header" id="site-header">
     <div class="header-container">
-      <a href="#hero" class="brand-logo">
+      
+      <!-- LOGO DE LA MARCA (conecta con el inicio #hero) -->
+      <a href="#hero" class="brand-logo" title="Ir al Inicio">
         <span class="logo-icon">
           <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
             <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
@@ -31,8 +52,10 @@
         <span class="logo-text">RONIN<span class="accent-text">//TECH</span></span>
       </a>
 
+      <!-- MENÚ DE NAVEGACIÓN EN ESCRITORIO (Se convierte en desplegable móvil en pantallas <= 1024px) -->
       <nav class="nav-menu">
         <a href="#hero" class="nav-link active">Inicio</a>
+        <a href="#vistos" class="nav-link">Recomendados</a>
         <a href="#catalogo" class="nav-link">Catálogo</a>
         <a href="#ofertas" class="nav-link">Ofertas</a>
         <a href="#comparativa" class="nav-link">Comparativa</a>
@@ -40,7 +63,9 @@
         <a href="#faq" class="nav-link">FAQ</a>
       </nav>
 
+      <!-- ACCIONES DEL HEADER: BUSCADOR EN VIVO, CARRITO Y MENÚ HAMBURGUESA -->
       <div class="header-actions">
+        <!-- Campo de búsqueda interactiva (Conectado a script.js vía id="header-search") -->
         <div class="search-box">
           <svg class="search-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="11" cy="11" r="8"></circle>
@@ -49,15 +74,18 @@
           <input type="text" id="header-search" placeholder="Buscar tecnología..." aria-label="Buscar tecnología">
         </div>
 
+        <!-- Botón disparador del Carrito Deslizable (Conectado a script.js vía id="cart-trigger") -->
         <button class="cart-trigger" id="cart-trigger" aria-label="Ver Carrito de Compras">
           <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
             <line x1="3" y1="6" x2="21" y2="6"></line>
             <path d="M16 10a4 4 0 0 1-8 0"></path>
           </svg>
+          <!-- Contador de items dinámico (actualizado por updateCartUI en script.js) -->
           <span class="cart-badge" id="cart-badge">0</span>
         </button>
 
+        <!-- Botón Menú Hamburguesa para Móviles (Conectado a script.js vía id="mobile-toggle") -->
         <button class="mobile-toggle" id="mobile-toggle" aria-label="Abrir Menú Navegación">
           <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="3" y1="12" x2="21" y2="12"></line>
@@ -69,16 +97,25 @@
     </div>
   </header>
 
-  <!-- ===== PORTADA HERO (SPOTLIGHT INTERACTIVO) ===== -->
   <main>
+    <!-- 
+      ==========================================================================
+      2. PORTADA HERO PRINCIPAL (EFECTO INTERACTIVO DE LINTERNA SPOTLIGHT REVEAL)
+      --------------------------------------------------------------------------
+      - Propósito: Presentación de alto impacto visual con dos capas de imagen:
+        1. .hero-base-img (fondo oscuro base).
+        2. .hero-reveal-img (capa iluminada que sigue la posición del ratón/dedo en script.js).
+      - Mantenimiento: Para cambiar las imágenes de fondo, modifica las rutas en style="background-image:url(...)".
+      ==========================================================================
+    -->
     <section class="hero" id="hero">
       <!-- Imagen de fondo base -->
       <div class="hero-base-img hero-image-animate" style="background-image:url('img/fondo-base.jpg');"></div>
 
-      <!-- Imagen superior revelada por cursor linterna -->
+      <!-- Imagen superior revelada por cursor linterna (id="reveal-img") -->
       <div class="hero-reveal-img" id="reveal-img" style="background-image:url('img/fondo-reveal.jpg');"></div>
 
-      <!-- Interfaz superpuesta -->
+      <!-- Interfaz superpuesta (Textos, CTAs, Tarjeta de producto e Especificaciones) -->
       <div class="hero-ui">
         <div class="hero-left">
           <div class="hero-copy">
@@ -101,6 +138,7 @@
               <a href="#ofertas" class="btn-secondary">Ofertas Especiales</a>
             </div>
 
+            <!-- Íconos de características del equipo -->
             <div class="icon-row fade-up-reveal" data-delay="0.75">
               <button class="icon-btn" aria-label="Procesamiento Neuronal" title="Procesamiento Neuronal">
                 <svg viewBox="0 0 16 16" fill="none" stroke="currentColor">
@@ -127,7 +165,7 @@
             </div>
           </div>
 
-          <!-- Tarjeta de producto destacado en Hero -->
+          <!-- Tarjeta de Producto Destacado en Hero -->
           <article class="product-card">
             <div class="product-thumb" style="background-image:url('img/cyber_glasses.png');"></div>
             <div class="product-body">
@@ -142,6 +180,7 @@
 
         <div class="hero-page fade-up-reveal" data-delay="0.75">EDICIÓN // 2026</div>
 
+        <!-- Especificaciones Operativas Destacadas -->
         <div class="specs">
           <h3 class="words-pull-up">Especificaciones Destacadas</h3>
           <div class="spec-row fade-up-reveal" data-delay="1.2">
@@ -164,7 +203,13 @@
       </div>
     </section>
 
-    <!-- ===== BARRA DE BENEFICIOS / PROPUESTA DE VALOR ===== -->
+    <!-- 
+      ==========================================================================
+      3. BARRA DE BENEFICIOS Y GARANTÍAS (TRUST BANNER)
+      --------------------------------------------------------------------------
+      - Propósito: Transmitir confianza al cliente (Envíos, Garantía, Pagos y Soporte).
+      ==========================================================================
+    -->
     <section class="trust-banner">
       <div class="trust-grid">
         <div class="trust-item">
@@ -221,15 +266,62 @@
       </div>
     </section>
 
-    <!-- ===== CATÁLOGO DE PRODUCTOS DE TECNOLOGÍA ===== -->
-    <section class="catalog-section" id="catalogo">
-      <div class="section-header">
-        <div class="section-tag">TIENDA ONLINE</div>
-        <h2>Catálogo de Tecnología Futura</h2>
-        <p>Explora dispositivos de última generación, wearables neuronales, laptops cuánticas y gadgets de sonido avanzado.</p>
+    <!-- 
+      ==========================================================================
+      4. CARRUSEL 1: INSPIRADO EN LO ÚLTIMO QUE VISTE (SLIDER HORIZONTAL)
+      --------------------------------------------------------------------------
+      - Propósito: Presentar recomendaciones personalizadas en carrusel deslizable
+        con botones de dirección < y > (desplazados mediante slideProducts en script.js).
+      ==========================================================================
+    -->
+    <section class="slider-section" id="vistos">
+      <div class="slider-container-header">
+        <div class="section-title-box">
+          <span class="section-tag">PERSONALIZADO PARA TI</span>
+          <h2>Inspirado en lo último que viste</h2>
+        </div>
       </div>
 
-      <!-- Barra de Filtros y Búsqueda -->
+      <div class="slider-relative-wrapper">
+        <!-- Botón Anterior < -->
+        <button class="slider-btn slider-btn-prev" onclick="slideProducts('slider-recent', -1)" aria-label="Ver productos anteriores">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+
+        <!-- Contenedor del Slider (id="slider-recent" poblado dinámicamente) -->
+        <div class="product-slider" id="slider-recent">
+          <!-- Generado dinámicamente desde script.js -->
+        </div>
+
+        <!-- Botón Siguiente > -->
+        <button class="slider-btn slider-btn-next" onclick="slideProducts('slider-recent', 1)" aria-label="Ver más productos">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- 
+      ==========================================================================
+      5. CATÁLOGO PRINCIPAL CON FILTROS Y PAGINACIÓN INTEGRADA
+      --------------------------------------------------------------------------
+      - Propósito: Núcleo de la tienda e-commerce. Incluye pestañas de categorías,
+        ordenador por precio/popularidad, indicador de items y botón "Cargar Más".
+      - Mantenimiento: Para agregar una nueva categoría, añade un <button class="filter-tab"
+        data-category="tu_categoria">Nombre (0)</button> y registra la categoría en script.js.
+      ==========================================================================
+    -->
+    <section class="catalog-section" id="catalogo">
+      <div class="section-header">
+        <div class="section-tag">EXPLORAR TIENDA</div>
+        <h2>Catálogo Completo de Tecnología</h2>
+        <p>Explora dispositivos cibernéticos de última generación, filtrados por tus preferencias.</p>
+      </div>
+
+      <!-- Barra de Filtros por Categoría y Ordenador -->
       <div class="catalog-controls">
         <div class="filter-tabs">
           <button class="filter-tab active" data-category="all">Todos los Productos</button>
@@ -250,13 +342,29 @@
         </div>
       </div>
 
-      <!-- Grid dinámico de productos -->
+      <!-- Indicador Dinámico de Productos Coincidentes (id="catalog-info-bar") -->
+      <div class="catalog-info-bar" id="catalog-info-bar">
+        <span>Cargando productos...</span>
+      </div>
+
+      <!-- Grid Principal de Productos (id="products-grid" poblado por renderCatalog) -->
       <div class="products-grid" id="products-grid">
+        <!-- Generado dinámicamente desde script.js -->
+      </div>
+
+      <!-- Botón de Paginación "Ver Más Productos" (id="pagination-wrapper") -->
+      <div class="pagination-wrapper" id="pagination-wrapper">
         <!-- Generado dinámicamente desde script.js -->
       </div>
     </section>
 
-    <!-- ===== SECCIÓN DE OFERTA RELÁMPAGO / DEAL OF THE DAY ===== -->
+    <!-- 
+      ==========================================================================
+      6. SECCIÓN DE OFERTA RELÁMPAGO (DEAL OF THE DAY + TIMER)
+      --------------------------------------------------------------------------
+      - Propósito: Generar urgencia de compra con un reloj contador en vivo.
+      ==========================================================================
+    -->
     <section class="deal-section" id="ofertas">
       <div class="deal-container">
         <div class="deal-content">
@@ -264,6 +372,7 @@
           <h2>RONIN VR-X PRO EDITION</h2>
           <p>Visor Inmersivo con retroalimentación háptica de cuerpo completo, renderizado foveado y tasa de refresco de 180Hz. Edición especial de coleccionista con acabados metálicos.</p>
 
+          <!-- Reloj de cuenta regresiva dinámico -->
           <div class="deal-timer-wrapper">
             <span class="timer-label">La oferta termina en:</span>
             <div class="deal-timer" id="deal-timer">
@@ -295,7 +404,81 @@
       </div>
     </section>
 
-    <!-- ===== MATRIZ COMPARATIVA DE TECNOLOGÍA ===== -->
+    <!-- 
+      ==========================================================================
+      7. CARRUSEL 2: ELEGIDOS PARA TI EN CELULARES Y WEARABLES
+      --------------------------------------------------------------------------
+      - Propósito: Presentación horizontal de la línea de Smartphones y Wearables.
+      ==========================================================================
+    -->
+    <section class="slider-section">
+      <div class="slider-container-header">
+        <div class="section-title-box">
+          <span class="section-tag">DESTACADOS EN MOVILIDAD</span>
+          <h2>Elegidos para ti en Celulares y Wearables</h2>
+        </div>
+      </div>
+
+      <div class="slider-relative-wrapper">
+        <button class="slider-btn slider-btn-prev" onclick="slideProducts('slider-mobiles', -1)" aria-label="Ver anteriores">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+
+        <div class="product-slider" id="slider-mobiles">
+          <!-- Generado dinámicamente desde script.js -->
+        </div>
+
+        <button class="slider-btn slider-btn-next" onclick="slideProducts('slider-mobiles', 1)" aria-label="Ver más">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- 
+      ==========================================================================
+      8. CARRUSEL 3: LAPTOPS Y ESTACIONES DE TRABAJO CUÁNTICAS
+      --------------------------------------------------------------------------
+      - Propósito: Presentación horizontal de Laptops y Equipos de Audio.
+      ==========================================================================
+    -->
+    <section class="slider-section">
+      <div class="slider-container-header">
+        <div class="section-title-box">
+          <span class="section-tag">MÁXIMO RENDIMIENTO</span>
+          <h2>Laptops y Estaciones de Trabajo Cuánticas</h2>
+        </div>
+      </div>
+
+      <div class="slider-relative-wrapper">
+        <button class="slider-btn slider-btn-prev" onclick="slideProducts('slider-laptops', -1)" aria-label="Ver anteriores">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+
+        <div class="product-slider" id="slider-laptops">
+          <!-- Generado dinámicamente desde script.js -->
+        </div>
+
+        <button class="slider-btn slider-btn-next" onclick="slideProducts('slider-laptops', 1)" aria-label="Ver más">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- 
+      ==========================================================================
+      9. TABLA COMPARATIVA DE ESPECIFICACIONES TÉCNICAS
+      --------------------------------------------------------------------------
+      - Propósito: Facilitar la toma de decisiones al comprador comparando flagships.
+      ==========================================================================
+    -->
     <section class="comparison-section" id="comparativa">
       <div class="section-header">
         <div class="section-tag">COMPARATIVA TÉCNICA</div>
@@ -361,7 +544,13 @@
       </div>
     </section>
 
-    <!-- ===== RESEÑAS DE COMPRADORES VERIFICADOS ===== -->
+    <!-- 
+      ==========================================================================
+      10. RESEÑAS DE COMPRADORES VERIFICADOS
+      --------------------------------------------------------------------------
+      - Propósito: Prueba social para aumentar la tasa de conversión de la tienda.
+      ==========================================================================
+    -->
     <section class="reviews-section" id="resenas">
       <div class="section-header">
         <div class="section-tag">TESTIMONIOS REALES</div>
@@ -417,7 +606,13 @@
       </div>
     </section>
 
-    <!-- ===== PREGUNTAS FRECUENTES (FAQ) ===== -->
+    <!-- 
+      ==========================================================================
+      11. SECCIÓN FAQ (PREGUNTAS FRECUENTES ACCORDEÓN)
+      --------------------------------------------------------------------------
+      - Propósito: Resolver dudas frecuentes utilizando elementos nativos HTML5 <details>.
+      ==========================================================================
+    -->
     <section class="faq-section" id="faq">
       <div class="section-header">
         <div class="section-tag">RESOLVEMOS TUS DUDAS</div>
@@ -468,7 +663,13 @@
       </div>
     </section>
 
-    <!-- ===== NEWSLETTER DE DESCUENTO ===== -->
+    <!-- 
+      ==========================================================================
+      12. SECCIÓN NEWSLETTER (SUSCRIPCIÓN & CUPÓN)
+      --------------------------------------------------------------------------
+      - Propósito: Captar correos de clientes ofreciendo el código de descuento MOTIOS10.
+      ==========================================================================
+    -->
     <section class="newsletter-section">
       <div class="newsletter-card">
         <div class="newsletter-content">
@@ -483,7 +684,13 @@
     </section>
   </main>
 
-  <!-- ===== FOOTER COMPLETOS DE E-COMMERCE ===== -->
+  <!-- 
+    ==========================================================================
+    13. FOOTER GLOBAL E-COMMERCE
+    --------------------------------------------------------------------------
+    - Propósito: Enlaces de pie de página, redes, aviso legal e insignias de métodos de pago.
+    ==========================================================================
+  -->
   <footer class="site-footer">
     <div class="footer-container">
       <div class="footer-col brand-col">
@@ -511,6 +718,7 @@
         <h4>Navegación</h4>
         <ul>
           <li><a href="#hero">Inicio</a></li>
+          <li><a href="#vistos">Recomendados</a></li>
           <li><a href="#catalogo">Catálogo de Productos</a></li>
           <li><a href="#ofertas">Ofertas Especiales</a></li>
           <li><a href="#comparativa">Comparativa Técnica</a></li>
@@ -533,7 +741,7 @@
         <h4>Contacto & Soporte</h4>
         <p>Email: soporte@cyberronin-tech.com</p>
         <p>Teléfono: +1 (800) 987-RONIN</p>
-        <p>Horario: Atencion 24/7 Red Neuronal</p>
+        <p>Horario: Atención 24/7 Red Neuronal</p>
       </div>
     </div>
 
@@ -547,7 +755,18 @@
     </div>
   </footer>
 
-  <!-- ===== MODAL / SLIDE-OVER DRAWER DE CARRITO DE COMPRAS ===== -->
+  <!-- 
+    ==========================================================================
+    14. COMPONENTES EMERGENTES: CARRITO SLIDE-OVER & MODALES (OVERLAYS)
+    --------------------------------------------------------------------------
+    - cart-drawer: Panel deslizable del carrito de compras.
+    - quickview-modal: Ventana de vista rápida de producto.
+    - checkout-modal: Proceso de finalización de compra e ingreso de datos.
+    - toast-container: Contenedor flotante de avisos temporales (toasts).
+    ==========================================================================
+  -->
+  
+  <!-- OVERLAY Y DRAWER DE CARRITO DESLIZABLE -->
   <div class="cart-overlay" id="cart-overlay"></div>
   <aside class="cart-drawer" id="cart-drawer" aria-label="Carrito de Compras">
     <div class="cart-header">
@@ -562,10 +781,12 @@
       <button class="close-btn" id="close-cart" aria-label="Cerrar Carrito">&times;</button>
     </div>
 
+    <!-- Lista de items agregados al carrito (poblada en script.js) -->
     <div class="cart-items" id="cart-items">
-      <!-- Generado dinámicamente -->
+      <!-- Generado dinámicamente desde script.js -->
     </div>
 
+    <!-- Resumen y Checkout del Carrito -->
     <div class="cart-footer">
       <div class="coupon-wrapper">
         <input type="text" id="coupon-input" placeholder="Código de Cupón (ej: NEURAL20)">
@@ -590,21 +811,21 @@
       </div>
 
       <button type="button" class="btn-checkout" id="checkout-btn" onclick="openCheckout()">
-        Proceder al Pago Segura
+        Proceder al Pago Seguro
       </button>
     </div>
   </aside>
 
-  <!-- ===== MODAL DE VISTA RÁPIDA DE PRODUCTO (QUICK VIEW) ===== -->
+  <!-- MODAL DE VISTA RÁPIDA DE PRODUCTO (QUICK VIEW) -->
   <div class="modal-overlay" id="quickview-overlay"></div>
   <div class="modal" id="quickview-modal">
     <button class="modal-close" onclick="closeQuickView()">&times;</button>
     <div class="modal-body" id="quickview-content">
-      <!-- Generado dinámicamente -->
+      <!-- Generado dinámicamente desde script.js -->
     </div>
   </div>
 
-  <!-- ===== MODAL DE CHECKOUT / PROCESO DE COMPRA ===== -->
+  <!-- MODAL DE CHECKOUT / PROCESO DE COMPRA -->
   <div class="modal-overlay" id="checkout-overlay"></div>
   <div class="modal checkout-modal" id="checkout-modal">
     <button class="modal-close" onclick="closeCheckout()">&times;</button>
@@ -638,15 +859,15 @@
           <div class="payment-options">
             <label class="payment-radio">
               <input type="radio" name="payment" value="card" checked>
-              <span>💳 Tarjeta de Crédito / Débito</span>
+              <span>💳 Tarjeta de Crédito / Débito (Hasta 12 cuotas sin interés)</span>
             </label>
             <label class="payment-radio">
               <input type="radio" name="payment" value="paypal">
-              <span>🅿️ PayPal</span>
+              <span>®️ PayPal</span>
             </label>
             <label class="payment-radio">
               <input type="radio" name="payment" value="crypto">
-              <span>⚡ Criptomonedas (BTC / USDT)</span>
+              <span>⚡ Criptomonedas (BTC / USDT) - 5% Descuento Extra</span>
             </label>
           </div>
         </div>
@@ -661,6 +882,7 @@
         </button>
       </form>
 
+      <!-- PANTALLA DE ÉXITO Y RASTREO TRAS FINALIZAR COMPRA -->
       <div id="order-success" style="display: none;" class="order-success-view">
         <div class="success-icon">✓</div>
         <h3>¡Pedido Confirmado con Éxito!</h3>
@@ -674,7 +896,7 @@
     </div>
   </div>
 
-  <!-- Contenedor para Notificaciones Toast -->
+  <!-- CONTENEDOR FLOTANTE PARA NOTIFICACIONES TOAST -->
   <div class="toast-container" id="toast-container"></div>
 
 </body>

@@ -1,10 +1,47 @@
 /**
- * CYBER RONIN TECH STORE - CORE INTERACTIVE ENGINE
+ * ====================================================================================
+ * CYBER RONIN TECH STORE - MOTOR INTERACTIVO Y ARQUITECTURA DE JAVASCRIPT
+ * ====================================================================================
+ * 
+ * GUÍA DE ARQUITECTURA Y MANTENIMIENTO PARA DESARROLLADORES:
+ * 
+ * 1. ESTRUCTURA DEL MÓDULO:
+ *    - Encapsulado mediante una IIFE (Immediately Invoked Function Expression) con 'use strict'
+ *      para evitar la contaminación del ámbito global (`window`).
+ *    - Expone únicamente funciones globales necesarias adjuntadas explícitamente a `window`
+ *      (ej. `window.addToCartById`, `window.openQuickView`, `window.slideProducts`).
+ * 
+ * 2. SECCIONES PRINCIPALES Y FLUJO DE DATOS:
+ *    - 1. BASE DE DATOS (`PRODUCTS`): Array estático de 22 objetos con especificaciones, precios y categorías.
+ *    - 2. ESTADO DEL CARRITO (`cartState`): Sincronizado dinámicamente con `localStorage` ('cyber_cart').
+ *    - 3. REVEAL SPOTLIGHT: Efecto de máscara radial dinámico según la posición del cursor/touch.
+ *    - 4. REVEAL SCROLL ANIMATIONS: Animaciones tipográficas mediante `IntersectionObserver`.
+ *    - 5. MOTOR DE CATÁLOGOS: Filtrado por categoría/búsqueda, ordenamiento y paginación ("Cargar Más").
+ *    - 6. MOTOR DE CARRITO: Lógica CRUD (Añadir, eliminar, cambiar cantidad, aplicar cupones).
+ *    - 7. DRAWER Y MODALES: Paneles deslizantes y modales interactivos (Quick View, Checkout).
+ *    - 8. CARRUSELES HORIZONTALES: Desplazamiento suave multi-tarjeta estilo e-commerce masivo.
+ * 
+ * 3. CÓMO AGREGAR NUEVOS PRODUCTOS:
+ *    - Añade un objeto al array `PRODUCTS` siguiendo la estructura:
+ *      { id: 'p23', name: 'NOMBRE', category: 'laptops|wearables|smartphones|audio', price: 999, oldPrice: 1200, rating: 4.8, reviewsCount: 50, badge: 'NUEVO', img: 'img/...', specs: [...], desc: '...' }
+ *    - Los contadores de categoría (`updateTabCounts()`) se actualizarán automáticamente.
+ * 
+ * 4. CÓMO SOLUCIONAR BUGS COMUNES:
+ *    - El carrito no guarda productos -> Revisa si `localStorage` está deshabilitado o si se arrojó una excepción en `JSON.parse`.
+ *    - Los carruseles no se desplazan -> Verifica que el ID pasado a `slideProducts(sliderId, dir)` coincida exactamente con el HTML.
+ *    - El efecto Spotlight se corta en móviles -> Ajusta el radio en la función `getRadius()` dentro de la sección 3.
+ * ====================================================================================
  */
+
 (function () {
   'use strict';
 
-  /* ===== 1. BASE DE DATOS DEL CATÁLOGO DE PRODUCTOS ===== */
+  /* ====================================================================================
+   * ===== 1. BASE DE DATOS EXTENDIDA DE PRODUCTOS (22 ITEMS) ==========================
+   * ====================================================================================
+   * Propósito: Servir como fuente única de verdad para el catálogo general y los carruseles.
+   * Categorías válidas: 'wearables', 'smartphones', 'laptops', 'audio'.
+   * ==================================================================================== */
   var PRODUCTS = [
     {
       id: 'p1',
@@ -113,23 +150,331 @@
         'Códec Hi-Res LDAC'
       ],
       desc: 'Sonido cristalino en un formato compacto intrauditivo con resistencia IPX8 y control por gestos táctiles avanzadas.'
+    },
+    {
+      id: 'p7',
+      name: 'RONIN VR MATRIX GOGGLES',
+      category: 'wearables',
+      price: 650,
+      oldPrice: 799,
+      rating: 4.9,
+      reviewsCount: 45,
+      badge: 'NUEVO',
+      img: 'img/cyber_glasses.png',
+      specs: [
+        'Visión Foveal 10K OLED',
+        'Retroalimentación Háptica',
+        'Procesador Neural R2 Ultra',
+        'Lentes Asféricas Custom'
+      ],
+      desc: 'Sumérgete en simulación virtual hiperrealista con el sistema de rastreo ocular activo y campo de visión ampliado de 140 grados.'
+    },
+    {
+      id: 'p8',
+      name: 'CYBERPHONE ULTRA 5G',
+      category: 'smartphones',
+      price: 1150,
+      oldPrice: 1350,
+      rating: 4.9,
+      reviewsCount: 88,
+      badge: 'FLAGSHIP',
+      img: 'img/cyber_phone.png',
+      specs: [
+        'Pantalla Cuántica 6.9" 180Hz',
+        'Cámara Holográfica 3D 200MP',
+        'Batería Grapheno 6,000mAh',
+        'Armazón de Carbo-Titanio'
+      ],
+      desc: 'El buque insignia con batería de grafeno de ultra velocidad, conectividad satellital global y seguridad biométrica cuántica.'
+    },
+    {
+      id: 'p9',
+      name: 'CYBERBOOK SLIM AI LAPTOP',
+      category: 'laptops',
+      price: 1450,
+      oldPrice: 1699,
+      rating: 4.7,
+      reviewsCount: 39,
+      badge: 'ULTRABOOK',
+      img: 'img/cyber_laptop.png',
+      specs: [
+        'Pantalla 14" OLED 3.2K 120Hz',
+        'Procesador AI Core Ultra 7',
+        '32GB LPDDR5X / 1TB SSD',
+        'Peso Pluma 1.1kg'
+      ],
+      desc: 'La laptop ultraligera definitiva para ejecutivos y creadores de contenido que exigen máxima movilidad y aceleración por hardware AI.'
+    },
+    {
+      id: 'p10',
+      name: 'PULSE STUDIO MONITOR PRO',
+      category: 'audio',
+      price: 340,
+      oldPrice: 420,
+      rating: 4.9,
+      reviewsCount: 112,
+      badge: 'ESTUDIO',
+      img: 'img/cyber_headphones.png',
+      specs: [
+        'Drivers Planares de Magneto 55mm',
+        'Respuesta Plana 5Hz-50kHz',
+        'Construcción de Magnesio',
+        'Cable Balanceado 4.4mm'
+      ],
+      desc: 'Auriculares de referencia de estudio para ingenieros de mezcla y apasionados del audio analógico-digital de alta resolución.'
+    },
+    {
+      id: 'p11',
+      name: 'RONIN AI COMPANION POD',
+      category: 'wearables',
+      price: 290,
+      oldPrice: 350,
+      rating: 4.5,
+      reviewsCount: 29,
+      badge: 'GADGET',
+      img: 'img/cyber_glasses.png',
+      specs: [
+        'Asistente Holográfico 3D',
+        'Procesamiento Local de Voz',
+        'Hub de Domótica Neuronal',
+        'Batería Inductiva 7 días'
+      ],
+      desc: 'Dispositivo asistente portátil con proyección holográfica compacta e integración domótica con todos tus equipos Cyber Ronin.'
+    },
+    {
+      id: 'p12',
+      name: 'CYBERPHONE FOLDABLE NEURAL',
+      category: 'smartphones',
+      price: 1499,
+      oldPrice: 1799,
+      rating: 4.8,
+      reviewsCount: 53,
+      badge: 'PREMIUM',
+      img: 'img/cyber_phone.png',
+      specs: [
+        'Pantalla Plegable 8.0" FlexOLED',
+        'Bisagra de Titanio Líquido',
+        'S Pen Cyber Edition',
+        'Multitarea en 4 Ventanas'
+      ],
+      desc: 'Combina el formato de un smartphone compacto con una tableta de trabajo completa de 8 pulgadas mediante pantalla flexible de zafiro.'
+    },
+    {
+      id: 'p13',
+      name: 'TITAN STATION GAMING DESKTOP',
+      category: 'laptops',
+      price: 2499,
+      oldPrice: 2999,
+      rating: 5.0,
+      reviewsCount: 74,
+      badge: 'POTENCIA AI',
+      img: 'img/cyber_laptop.png',
+      specs: [
+        'Procesador Quantum i9 24-Core',
+        'NVIDIA RTX 5090 Cyber Edition',
+        '128GB RAM DDR5 / 4TB SSD',
+        'Refrigeración Líquida Neón'
+      ],
+      desc: 'Estación de trabajo y gaming de potencia bruta extrema con arquitectura neuronal dedicada y chasis cibernético iluminado.'
+    },
+    {
+      id: 'p14',
+      name: 'NEURAL RING APEX SMART RING',
+      category: 'wearables',
+      price: 240,
+      oldPrice: 299,
+      rating: 4.6,
+      reviewsCount: 92,
+      badge: 'WEARABLE',
+      img: 'img/cyber_glasses.png',
+      specs: [
+        'Monitoreo Cardíaco & Sueño EEG',
+        'Titanio Grado Médico 5',
+        'Control Gestual Táctil',
+        'Sumergible hasta 50m'
+      ],
+      desc: 'Anillo inteligente ultraligero que analiza tus constantes biológicas en tiempo real y permite controlar dispositivos por gestos.'
+    },
+    {
+      id: 'p15',
+      name: 'CYBERPHONE MINI COMPACT',
+      category: 'smartphones',
+      price: 699,
+      oldPrice: 850,
+      rating: 4.7,
+      reviewsCount: 67,
+      badge: 'COMPACTO',
+      img: 'img/cyber_phone.png',
+      specs: [
+        'Pantalla 5.4" OLED 120Hz',
+        'Chip CyberSOC Lite 3.0GHz',
+        'Doble Cámara Neón 50MP',
+        'Cuerpo Ultra Delgado 140g'
+      ],
+      desc: 'Toda la potencia cibernética en una pantalla compacta de 5.4 pulgadas diseñada para uso ergonómico a una sola mano.'
+    },
+    {
+      id: 'p16',
+      name: 'SOUNDCUBE NEON SPEAKER',
+      category: 'audio',
+      price: 149,
+      oldPrice: 199,
+      rating: 4.5,
+      reviewsCount: 143,
+      badge: 'LIMITADA',
+      img: 'img/cyber_headphones.png',
+      specs: [
+        'Sonido 360° Neón 60W',
+        'Graves Sub-Woofer Pasivos',
+        'Iluminación RGB Audiorítmica',
+        'Batería de 24 Horas'
+      ],
+      desc: 'Altavoz inalámbrico portátil con sonido estéreo 360 grados, iluminación RGB reactiva al ritmo de la música y resistencia IP67.'
+    },
+    {
+      id: 'p17',
+      name: 'QUANTUM COREFLEX LAPTOP 15',
+      category: 'laptops',
+      price: 1299,
+      oldPrice: 1550,
+      rating: 4.8,
+      reviewsCount: 51,
+      badge: 'OFERTA',
+      img: 'img/cyber_laptop.png',
+      specs: [
+        'Pantalla 15.6" OLED 165Hz',
+        'Intel Core i7 14th Gen',
+        '16GB RAM DDR5 / 1TB SSD',
+        'Teclado RGB Programable'
+      ],
+      desc: 'El balance perfecto entre portabilidad, rendimiento para programación y procesamiento de IA en un formato versátil de 15.6 pulgadas.'
+    },
+    {
+      id: 'p18',
+      name: 'CYBER SOUNDBAR PRO 7.1',
+      category: 'audio',
+      price: 450,
+      oldPrice: 580,
+      rating: 4.9,
+      reviewsCount: 38,
+      badge: 'HI-FI HOME',
+      img: 'img/cyber_headphones.png',
+      specs: [
+        'Sonido Envolvente Dolby Atmos',
+        'Subwoofer Inalámbrico 300W',
+        'HDMI eARC 8K Pass-Through',
+        'Calibración Acústica por IA'
+      ],
+      desc: 'Barra de sonido de cine en casa con 11 altavoces integrados, proyección espacial Dolby Atmos y subwoofer inalámbrico retumbante.'
+    },
+    {
+      id: 'p19',
+      name: 'RONIN XR AR GLASSES LITE',
+      category: 'wearables',
+      price: 399,
+      oldPrice: 499,
+      rating: 4.7,
+      reviewsCount: 84,
+      badge: 'LIVIANO',
+      img: 'img/cyber_glasses.png',
+      specs: [
+        'Pantalla Proyectada 201" Micro-OLED',
+        'Peso Pluma de 75g',
+        'Compatibilidad Universal USB-C',
+        'Audio Espacial Incorporado'
+      ],
+      desc: 'Gafas de realidad aumentada ligeras que proyectan un monitor virtual de 201 pulgadas ante tus ojos para trabajar o jugar donde sea.'
+    },
+    {
+      id: 'p20',
+      name: 'CYBERPHONE GAMING RED',
+      category: 'smartphones',
+      price: 950,
+      oldPrice: 1199,
+      rating: 4.8,
+      reviewsCount: 105,
+      badge: 'GAMER',
+      img: 'img/cyber_phone.png',
+      specs: [
+        'Pantalla 6.78" AMOLED 165Hz',
+        'Gatillos Ultrasónicos Laterales',
+        'Ventilador Físico Interno 20k RPM',
+        'Carga Rápida 65W Bypass'
+      ],
+      desc: 'Diseñado puramente para e-sports móviles con gatillos capacitivos configurables, ventilación activa por turbina y batería dual.'
+    },
+    {
+      id: 'p21',
+      name: 'QUANTUM POWERBANK 50000MAH',
+      category: 'audio',
+      price: 110,
+      oldPrice: 150,
+      rating: 4.9,
+      reviewsCount: 230,
+      badge: 'ACCESORIO',
+      img: 'img/cyber_headphones.png',
+      specs: [
+        'Capacidad 50,000 mAh PD 100W',
+        'Carga Simultánea de 4 Equipos',
+        'Pantalla Digital OLED de Wats',
+        'Linterna LED SOS Integrada'
+      ],
+      desc: 'Estación de energía portátil capaz de cargar tu laptop, teléfono y visores VR múltiples veces con potencia de salida de 100W.'
+    },
+    {
+      id: 'p22',
+      name: 'NEURAL DISPLAY CURVED 49"',
+      category: 'laptops',
+      price: 1399,
+      oldPrice: 1699,
+      rating: 5.0,
+      reviewsCount: 41,
+      badge: '240HZ 4K',
+      img: 'img/cyber_laptop.png',
+      specs: [
+        'Panel Curvo 1000R QD-OLED 49"',
+        'Resolución DQHD 5120x1440',
+        'Tiempo de Respuesta 0.03ms',
+        'Hub USB-C con Carga 90W'
+      ],
+      desc: 'Monitor super ultrawide equivalente a dos pantallas 4K integradas sin bisel, con frecuencia de actualización récord de 240Hz.'
     }
   ];
 
-  /* ===== 2. ESTADO DEL CARRITO DE COMPRAS ===== */
+  /* ====================================================================================
+   * ===== 2. ESTADO DEL CARRITO DE COMPRAS ============================================
+   * ====================================================================================
+   * Propósito: Mantener la lista de productos seleccionados por el usuario y persistirla.
+   * `cartState`: Array de objetos `{ id, name, price, img, qty }`.
+   * `appliedDiscount`: Porcentaje entero de descuento activo (ej. 20 para 20% OFF).
+   * ==================================================================================== */
   var cartState = JSON.parse(localStorage.getItem('cyber_cart') || '[]');
-  var appliedDiscount = 0; // Porcentaje de descuento
+  var appliedDiscount = 0;
 
-  /* ===== 3. SPOTLIGHT REVEAL ENGINE ===== */
+  /* ====================================================================================
+   * ===== 3. REVEAL SPOTLIGHT ENGINE (EFECTO LINTERNA/LENTE SEGUNDA CAPA) ==============
+   * ====================================================================================
+   * Propósito: Revelar la imagen `#reveal-img` (fondo de alta definición/neón) aplicando
+   * una máscara de degradado radial en la posición exacta del puntero o touch.
+   * ==================================================================================== */
   var revealEl = document.getElementById('reveal-img');
 
+  /**
+   * Obtiene el radio del círculo de revelado ajustado dinámicamente según el ancho de pantalla.
+   * @returns {number} Radio en píxeles.
+   */
   function getRadius() {
     var w = window.innerWidth;
-    if (w < 480) return 120;
-    if (w < 720) return 160;
-    return 440;
+    if (w < 480) return 120; // Tamaño reducido para smartphones pequeños
+    if (w < 720) return 160; // Tablets portátiles
+    return 440;              // Desktop full HD
   }
 
+  /**
+   * Actualiza el atributo `mask-image` de la capa `#reveal-img` usando coordenadas relativas.
+   * @param {number} clientX - Coordenada X global del evento.
+   * @param {number} clientY - Coordenada Y global del evento.
+   */
   function updateSpotlight(clientX, clientY) {
     if (!revealEl) return;
     var rect = revealEl.getBoundingClientRect();
@@ -141,6 +486,7 @@
     revealEl.style.maskImage = mask;
   }
 
+  // Escuchadores de eventos para escritorio (mousemove) y pantallas táctiles (touchmove)
   window.addEventListener('mousemove', function (e) {
     updateSpotlight(e.clientX, e.clientY);
   });
@@ -151,12 +497,19 @@
     }
   }, { passive: true });
 
-  /* ===== 4. WORD SPLIT & ANIMACIONES SCROLL ===== */
+  /* ====================================================================================
+   * ===== 4. WORD SPLIT & ANIMACIONES AL HACER SCROLL =================================
+   * ====================================================================================
+   * Propósito: Descomponer el texto de los títulos con la clase `.words-pull-up` en <span>
+   * individuales por palabra para aplicar la animación CSS de revelado secuencial.
+   * Integrado con `IntersectionObserver` para activar la animación solo cuando es visible.
+   * ==================================================================================== */
   function splitWords(el) {
     if (el.dataset.split) return;
     el.dataset.split = 'true';
     var wordIndex = 0;
 
+    // Caso especial para H1 con elementos <span> hijos por línea de texto
     if (el.tagName === 'H1' && el.querySelector(':scope > span')) {
       var lines = Array.prototype.slice.call(el.children).filter(function (child) {
         return child.tagName === 'SPAN';
@@ -199,6 +552,7 @@
   var wordsPullUpEls = document.querySelectorAll('.words-pull-up');
   wordsPullUpEls.forEach(splitWords);
 
+  // Inicializar observadores de intersección si el navegador los soporta
   if ('IntersectionObserver' in window) {
     var wordsObserver = new IntersectionObserver(function (entries, observer) {
       entries.forEach(function (entry) {
@@ -229,15 +583,45 @@
     });
   }
 
-  /* ===== 5. RENDERING Y FILTRADO DEL CATÁLOGO ===== */
+  /* ====================================================================================
+   * ===== 5. RENDERING, FILTRADO Y PAGINACIÓN DEL CATÁLOGO ===========================
+   * ====================================================================================
+   * Propósito: Controlar la renderización dinámica de la cuadrícula principal `#products-grid`.
+   * Soporta:
+   * - Filtrado por categorías (`all`, `wearables`, `smartphones`, `laptops`, `audio`).
+   * - Búsqueda por coincidencia de texto en título o descripción.
+   * - Ordenamiento (Destacados, Precio Bajo/Alto, Rating).
+   * - Paginación incremental ("Cargar Más" de a 6 productos).
+   * ==================================================================================== */
   var currentCategory = 'all';
   var currentSearchQuery = '';
   var currentSort = 'featured';
+  var itemsPerPage = 6;
+  var visibleCount = 6;
 
-  function renderCatalog() {
+  /**
+   * Carga 6 productos adicionales en el catálogo al hacer clic en "Ver Más Productos".
+   */
+  window.loadMoreProducts = function () {
+    visibleCount += itemsPerPage;
+    renderCatalog(false);
+  };
+
+  /**
+   * Procesa los filtros activos y vuelve a renderizar el HTML del catálogo principal.
+   * @param {boolean} resetPaging - Si es true, reinicia el contador visible a 6 (ej. al cambiar filtro).
+   */
+  function renderCatalog(resetPaging) {
+    if (resetPaging !== false) {
+      visibleCount = itemsPerPage;
+    }
+
     var grid = document.getElementById('products-grid');
+    var infoBar = document.getElementById('catalog-info-bar');
+    var paginationWrapper = document.getElementById('pagination-wrapper');
     if (!grid) return;
 
+    // 1. Filtrado de Array
     var filtered = PRODUCTS.filter(function (p) {
       var matchesCategory = currentCategory === 'all' || p.category === currentCategory;
       var matchesSearch = p.name.toLowerCase().includes(currentSearchQuery.toLowerCase()) ||
@@ -245,7 +629,7 @@
       return matchesCategory && matchesSearch;
     });
 
-    // Ordenamiento
+    // 2. Ordenamiento de Array
     if (currentSort === 'price-low') {
       filtered.sort(function (a, b) { return a.price - b.price; });
     } else if (currentSort === 'price-high') {
@@ -254,14 +638,33 @@
       filtered.sort(function (a, b) { return b.rating - a.rating; });
     }
 
-    if (filtered.length === 0) {
-      grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--muted);">' +
-                       '<h3>No se encontraron productos</h3><p>Intenta cambiar los términos de búsqueda o los filtros.</p></div>';
+    var totalMatches = filtered.length;
+
+    // 3. Actualizar barra de estado con contadores
+    if (infoBar) {
+      if (totalMatches === 0) {
+        infoBar.innerHTML = '<span>No se encontraron productos coincidentes.</span>';
+      } else {
+        var showingUntil = Math.min(visibleCount, totalMatches);
+        infoBar.innerHTML = '<span>Mostrando <strong style="color:var(--orange);">' + showingUntil + '</strong> de <strong>' + totalMatches + '</strong> productos de tecnología</span>';
+      }
+    }
+
+    // 4. Manejo de estado sin resultados
+    if (totalMatches === 0) {
+      grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 50px 20px; background:var(--card); border-radius:18px; border:1px solid var(--card-border);">' +
+                       '<h3 style="color:var(--cream); font-size:1.2rem; margin-bottom:8px;">No se encontraron resultados</h3>' +
+                       '<p style="color:var(--muted); font-size:13px;">Intenta cambiar el filtro de categoría o usar otros términos de búsqueda.</p></div>';
+      if (paginationWrapper) paginationWrapper.innerHTML = '';
       return;
     }
 
+    // 5. Cortar la lista según el número actual de items visibles
+    var visibleProducts = filtered.slice(0, visibleCount);
+
+    // 6. Generación del HTML de las tarjetas
     var html = '';
-    filtered.forEach(function (p) {
+    visibleProducts.forEach(function (p) {
       var specsHtml = p.specs.slice(0, 2).map(function (s) {
         return '<li>' + s + '</li>';
       }).join('');
@@ -290,40 +693,97 @@
     });
 
     grid.innerHTML = html;
+
+    // 7. Renderizado del botón "Ver Más Productos" o mensaje de fin
+    if (paginationWrapper) {
+      if (visibleCount < totalMatches) {
+        var remaining = totalMatches - visibleCount;
+        paginationWrapper.innerHTML = '<button class="btn-load-more" onclick="loadMoreProducts()">' +
+                                       '<span>Ver Más Productos (' + remaining + ' restantes)</span>' +
+                                       '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>' +
+                                       '</button>';
+      } else if (totalMatches > itemsPerPage) {
+        paginationWrapper.innerHTML = '<div class="all-loaded-msg">✓ Has visto todos los ' + totalMatches + ' productos disponibles</div>';
+      } else {
+        paginationWrapper.innerHTML = '';
+      }
+    }
   }
 
-  // Event Listeners para Filtros
+  /**
+   * Actualiza el texto numérico en los botones de categoría (ej. "Smartphones (5)").
+   */
+  function updateTabCounts() {
+    var counts = {
+      all: PRODUCTS.length,
+      wearables: PRODUCTS.filter(function(p){ return p.category === 'wearables'; }).length,
+      smartphones: PRODUCTS.filter(function(p){ return p.category === 'smartphones'; }).length,
+      laptops: PRODUCTS.filter(function(p){ return p.category === 'laptops'; }).length,
+      audio: PRODUCTS.filter(function(p){ return p.category === 'audio'; }).length
+    };
+
+    document.querySelectorAll('.filter-tab').forEach(function (tab) {
+      var cat = tab.getAttribute('data-category');
+      var labels = {
+        all: 'Todos los Productos',
+        wearables: 'VR & Wearables',
+        smartphones: 'Smartphones',
+        laptops: 'Laptops',
+        audio: 'Audio High-End'
+      };
+      if (labels[cat] && counts[cat] !== undefined) {
+        tab.textContent = labels[cat] + ' (' + counts[cat] + ')';
+      }
+    });
+  }
+
+  // Escuchadores para pestañas de filtrado
   document.querySelectorAll('.filter-tab').forEach(function (btn) {
     btn.addEventListener('click', function () {
       document.querySelectorAll('.filter-tab').forEach(function (b) { b.classList.remove('active'); });
       this.classList.add('active');
       currentCategory = this.getAttribute('data-category');
-      renderCatalog();
+      renderCatalog(true);
     });
   });
 
+  // Escuchador de entrada de texto para búsqueda en vivo
   var headerSearch = document.getElementById('header-search');
   if (headerSearch) {
     headerSearch.addEventListener('input', function (e) {
       currentSearchQuery = e.target.value;
-      renderCatalog();
+      renderCatalog(true);
     });
   }
 
+  // Escuchador de cambio en el selector de ordenamiento
   var sortSelect = document.getElementById('sort-select');
   if (sortSelect) {
     sortSelect.addEventListener('change', function (e) {
       currentSort = e.target.value;
-      renderCatalog();
+      renderCatalog(true);
     });
   }
 
-  /* ===== 6. GESTIÓN DEL CARRITO DE COMPRAS ===== */
+  /* ====================================================================================
+   * ===== 6. GESTIÓN DEL CARRITO DE COMPRAS (OPERACIONES Y INTERFAZ) ===================
+   * ====================================================================================
+   * Propósito: Manejar la lógica de negocio del carrito (agregar, eliminar, modificar qty),
+   * calcular subtotales/descuentos y sincronizar la interfaz del Drawer y Badges.
+   * ==================================================================================== */
+  
+  /**
+   * Guarda la variable `cartState` en `localStorage` y actualiza la UI del carrito.
+   */
   function saveCart() {
     localStorage.setItem('cyber_cart', JSON.stringify(cartState));
     updateCartUI();
   }
 
+  /**
+   * Añade un producto al carrito por su ID único o incrementa la cantidad si ya existe.
+   * @param {string} productId - ID del producto (ej. 'p1').
+   */
   window.addToCartById = function (productId) {
     var product = PRODUCTS.find(function (p) { return p.id === productId; });
     if (!product) return;
@@ -346,13 +806,16 @@
     openCartDrawer();
   };
 
+  /**
+   * Recalcula los montos del carrito y actualiza todos los elementos del DOM relacionados.
+   */
   function updateCartUI() {
     var totalCount = cartState.reduce(function (acc, item) { return acc + item.qty; }, 0);
     var subtotal = cartState.reduce(function (acc, item) { return acc + (item.price * item.qty); }, 0);
     var discountAmt = subtotal * (appliedDiscount / 100);
     var grandTotal = Math.max(0, subtotal - discountAmt);
 
-    // Actualizar Badges
+    // Actualizar Badges y Contadores
     var badge = document.getElementById('cart-badge');
     var drawerCount = document.getElementById('cart-drawer-count');
     if (badge) badge.textContent = totalCount;
@@ -376,7 +839,7 @@
       }
     }
 
-    // Renderizar Items en Drawer
+    // Renderizar lista de ítems dentro del Drawer
     var itemsContainer = document.getElementById('cart-items');
     if (!itemsContainer) return;
 
@@ -406,6 +869,11 @@
     itemsContainer.innerHTML = html;
   }
 
+  /**
+   * Modifica la cantidad de un ítem en el carrito.
+   * @param {string} id - ID del producto.
+   * @param {number} delta - Variación (+1 o -1).
+   */
   window.changeQty = function (id, delta) {
     var item = cartState.find(function (i) { return i.id === id; });
     if (!item) return;
@@ -416,13 +884,17 @@
     saveCart();
   };
 
+  /**
+   * Elimina un producto por completo del carrito.
+   * @param {string} id - ID del producto.
+   */
   window.removeFromCart = function (id) {
     cartState = cartState.filter(function (i) { return i.id !== id; });
     saveCart();
     showToast('Producto eliminado del carrito');
   };
 
-  // Cupones de Descuento
+  // Escuchador para la aplicación de Cupones de Descuento
   var applyCouponBtn = document.getElementById('apply-coupon-btn');
   if (applyCouponBtn) {
     applyCouponBtn.addEventListener('click', function () {
@@ -444,7 +916,12 @@
     });
   }
 
-  /* ===== 7. TOGGLE DEL DRAWER DE CARRITO ===== */
+  /* ====================================================================================
+   * ===== 7. TOGGLE DEL DRAWER DE CARRITO DESLIZANTE ==================================
+   * ====================================================================================
+   * Propósito: Abrir y cerrar el panel lateral del carrito activando/desactivando
+   * las clases `.active` en `#cart-drawer` y `#cart-overlay`.
+   * ==================================================================================== */
   var cartDrawer = document.getElementById('cart-drawer');
   var cartOverlay = document.getElementById('cart-overlay');
   var cartTrigger = document.getElementById('cart-trigger');
@@ -468,7 +945,12 @@
   if (closeCartBtn) closeCartBtn.addEventListener('click', closeCartDrawer);
   if (cartOverlay) cartOverlay.addEventListener('click', closeCartDrawer);
 
-  /* ===== 8. MODAL DE VISTA RÁPIDA (QUICK VIEW) ===== */
+  /* ====================================================================================
+   * ===== 8. MODAL DE VISTA RÁPIDA (QUICK VIEW) =======================================
+   * ====================================================================================
+   * Propósito: Mostrar los detalles completos del producto en una ventana modal flotante
+   * sin redirigir de página.
+   * ==================================================================================== */
   window.openQuickView = function (productId) {
     var product = PRODUCTS.find(function (p) { return p.id === productId; });
     if (!product) return;
@@ -505,7 +987,12 @@
   var qvOverlay = document.getElementById('quickview-overlay');
   if (qvOverlay) qvOverlay.addEventListener('click', closeQuickView);
 
-  /* ===== 9. MODAL DE CHECKOUT & PROCESO DE PAGO ===== */
+  /* ====================================================================================
+   * ===== 9. MODAL DE CHECKOUT & PROCESO DE PAGO ======================================
+   * ====================================================================================
+   * Propósito: Simular la pasarela de pago final con validación de carrito no vacío,
+   * cálculo de totales finales y generación de un código de rastreo aleatorio.
+   * ==================================================================================== */
   window.openCheckout = function () {
     if (cartState.length === 0) {
       showToast('Tu carrito está vacío. Añade productos antes de pagar.');
@@ -541,6 +1028,9 @@
     if (overlay) overlay.classList.remove('active');
   };
 
+  /**
+   * Procesa el formulario de checkout simulando una petición de 1.5 segundos a la pasarela.
+   */
   window.processOrder = function (e) {
     e.preventDefault();
     var submitBtn = document.getElementById('pay-submit-btn');
@@ -574,7 +1064,11 @@
   var ckOverlay = document.getElementById('checkout-overlay');
   if (ckOverlay) ckOverlay.addEventListener('click', closeCheckout);
 
-  /* ===== 10. NEWSLETTER SUBMISSION ===== */
+  /* ====================================================================================
+   * ===== 10. ENVÍO DE FORMULARIO DE NEWSLETTER =======================================
+   * ====================================================================================
+   * Propósito: Capturar el registro del boletín informativo y notificar el cupón obtenido.
+   * ==================================================================================== */
   var newsForm = document.getElementById('newsletter-form');
   if (newsForm) {
     newsForm.addEventListener('submit', function (e) {
@@ -584,7 +1078,11 @@
     });
   }
 
-  /* ===== 11. TOAST SYSTEM ===== */
+  /* ====================================================================================
+   * ===== 11. SISTEMA DE NOTIFICACIONES TOAST ========================================
+   * ====================================================================================
+   * Propósito: Generar pequeñas burbujas flotantes de alerta temporal en la esquina del sitio.
+   * ==================================================================================== */
   function showToast(msg) {
     var container = document.getElementById('toast-container');
     if (!container) return;
@@ -601,7 +1099,11 @@
     }, 3000);
   }
 
-  /* ===== 12. MENÚ MÓVIL HAMBURGUESA ===== */
+  /* ====================================================================================
+   * ===== 12. MENÚ MÓVIL HAMBURGUESA ==================================================
+   * ====================================================================================
+   * Propósito: Conmutar la visibilidad de la navegación flotante en dispositivos móviles.
+   * ==================================================================================== */
   var mobileToggle = document.getElementById('mobile-toggle');
   var navMenu = document.querySelector('.nav-menu');
 
@@ -610,7 +1112,6 @@
       navMenu.classList.toggle('mobile-active');
     });
 
-    // Cerrar menú móvil automáticamente al hacer clic en cualquier enlace de navegación
     navMenu.querySelectorAll('.nav-link').forEach(function (link) {
       link.addEventListener('click', function () {
         navMenu.classList.remove('mobile-active');
@@ -618,8 +1119,95 @@
     });
   }
 
-  /* ===== INITIAL RENDER ===== */
+  /* ====================================================================================
+   * ===== 13. CARRUSELES HORIZONTALES / SLIDERS ENGINE ================================
+   * ====================================================================================
+   * Propósito: Controlar el desplazamiento suave horizontal (`scrollBy`) mediante los botones
+   * de navegación `<` y `>`, y generar las tarjetas estilo e-commerce (Mercado Libre / Amazon)
+   * con etiquetas de cuotas sin interés, porcentaje de descuento verde y envío ⚡ FULL.
+   * ==================================================================================== */
+
+  /**
+   * Desplaza el slider horizontal un 75% del ancho visible del contenedor.
+   * @param {string} sliderId - ID del contenedor con overflow-x auto.
+   * @param {number} direction - -1 para izquierda, 1 para derecha.
+   */
+  window.slideProducts = function (sliderId, direction) {
+    var slider = document.getElementById(sliderId);
+    if (!slider) return;
+    var amount = slider.clientWidth * 0.75;
+    slider.scrollBy({
+      left: direction * amount,
+      behavior: 'smooth'
+    });
+  };
+
+  /**
+   * Plantilla HTML para la creación de tarjetas dentro de los carruseles horizontales.
+   * @param {Object} p - Objeto producto proveniente de `PRODUCTS`.
+   * @returns {string} String HTML de la tarjeta de producto.
+   */
+  function createSliderCardHTML(p) {
+    var discountPercent = Math.round(((p.oldPrice - p.price) / p.oldPrice) * 100);
+    var cuotaPrice = Math.round(p.price / 6);
+
+    return '<article class="slider-card">' +
+           '<span class="card-badge">' + p.badge + '</span>' +
+           '<div class="card-media" style="background-image:url(\'' + p.img + '\');">' +
+           '  <div class="card-quick-view">' +
+           '    <button class="btn-secondary" onclick="openQuickView(\'' + p.id + '\')">Vista Rápida</button>' +
+           '  </div>' +
+           '</div>' +
+           '<div class="card-info">' +
+           '  <span class="card-category">' + p.category + '</span>' +
+           '  <h3 class="card-title">' + p.name + '</h3>' +
+           '  <div class="card-rating">★ ' + p.rating + ' <small>(' + p.reviewsCount + ')</small></div>' +
+           '  <div style="margin-top:auto;">' +
+           '    <div class="price-container">' +
+           '      <div style="display:flex; align-items:center;">' +
+           '        <span class="main-price">$' + p.price + ' USD</span>' +
+           '        <span class="discount-badge-green">' + discountPercent + '% OFF</span>' +
+           '      </div>' +
+           '      <span class="old-price-line">$' + p.oldPrice + ' USD</span>' +
+           '    </div>' +
+           '    <div class="cuotas-tag">6 cuotas de $' + cuotaPrice + ' sin interés</div>' +
+           '    <div class="full-shipping-tag"><span>Llega gratis mañana</span> ⚡ FULL</div>' +
+           '    <button class="add-btn" style="width:100%; margin-top:10px;" onclick="addToCartById(\'' + p.id + '\')">+ Añadir al Carrito</button>' +
+           '  </div>' +
+           '</div>' +
+           '</article>';
+  }
+
+  /**
+   * Filtra los productos de la base de datos y los inyecta en los 3 carruseles horizontales del DOM.
+   */
+  function renderSliders() {
+    var recentSlider = document.getElementById('slider-recent');
+    var mobileSlider = document.getElementById('slider-mobiles');
+    var laptopSlider = document.getElementById('slider-laptops');
+
+    if (recentSlider) {
+      var recentItems = PRODUCTS.slice(0, 8);
+      recentSlider.innerHTML = recentItems.map(createSliderCardHTML).join('');
+    }
+
+    if (mobileSlider) {
+      var mobileItems = PRODUCTS.filter(function (p) { return p.category === 'smartphones' || p.category === 'wearables'; });
+      mobileSlider.innerHTML = mobileItems.map(createSliderCardHTML).join('');
+    }
+
+    if (laptopSlider) {
+      var laptopItems = PRODUCTS.filter(function (p) { return p.category === 'laptops' || p.category === 'audio'; });
+      laptopSlider.innerHTML = laptopItems.map(createSliderCardHTML).join('');
+    }
+  }
+
+  /* ====================================================================================
+   * ===== INICIALIZACIÓN DE COMPONENTES AL CARGAR LA PÁGINA ============================
+   * ==================================================================================== */
+  updateTabCounts();
   renderCatalog();
+  renderSliders();
   updateCartUI();
 
 })();
